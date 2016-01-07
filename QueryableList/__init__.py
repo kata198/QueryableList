@@ -12,7 +12,7 @@
 
         QueryableListDicts - This assumes that each item is a dict [or implements __getitem__ and __contains__].
 
-        QueryableListMixed - QueryableList which can contain dict-like objects (implementing __getitem__ and __contains__) or object-like objects (implementing __getattribute__)
+        QueryableListMixed - QueryableList which can contain dict-like items or object-like items 
 
             This is somewhat slower than using QueryableListObjs or QueryableListDicts directly, but use it if you need to mix, or need to support either type.
 
@@ -22,7 +22,11 @@
     filterAnd returns a QueryableList where each item matches ALL of the provided criteria.
     filterOr returns a QueryableList where each item matches ANY of the provided criteria.
 
-    You specify the filter operations by passing arguments of $fieldName__$operation (e.x. results = objs.filter(name__ne='Tim') ), where "$fieldName" matches the name of an attribute/key and "$operation" is one of the following:
+    You specify the filter operations by passing arguments of $fieldName__$operation
+
+    Example: results = objs.filter(name__ne='Tim')
+
+    where "$fieldName" matches the name of an attribute/key and "$operation" is one of the following:
 
 
         * eq - Test equality ( = operator )
@@ -102,7 +106,7 @@ class QueryableListDicts(QueryableListBase):
 
 class QueryableListMixed(QueryableListBase):
     '''
-        QueryableListMixed - QueryableList which can contain dict-like objects (implementing __getitem__ and __contains__) or object-like objects (implementing __getattribute__)
+        QueryableListMixed - QueryableList which can contain dict-like items or object-like items 
         
             This is somewhat slower than using QueryableListObjs or QueryableListDicts directly, but use it if you need to mix, or need to support either type.
     '''

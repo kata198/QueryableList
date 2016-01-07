@@ -9,8 +9,11 @@ Use through one of the list-type extending classes:
 
 **QueryableListDicts** - This assumes that each item is a dict [or implements \_\_getitem\_\_].
 
-**QueryableListMixed** - QueryableList which can contain dict-like objects (implementing \_\_getitem\_\_ and \_\_contains\_\_) or object-like objects (implementing \_\_getattribute\_\_).
-    This is somewhat slower than using QueryableListObjs or QueryableListDicts directly, but use it if you need to mix, or need to support either type.
+**QueryableListMixed** - QueryableList which can contain dict-like items or object-like item.
+
+  This is somewhat slower than using QueryableListObjs or QueryableListDicts directly, but use it if you need to mix, or need to support either type.
+
+
 
 You can filter these objects by using the method "filterAnd" (or its alias, "filter"), or "filterOr".
 
@@ -25,7 +28,11 @@ Items filtered do not need to be of the same type.
 If you filter on a field and it is not present on a member, the value of that field is assumed None (null) for comparison purposes.
 
 
-You specify the filter operations by passing arguments of $fieldName\_\_$operation (e.x. results = objs.filter(name\_\_ne='Tim') ), where "$fieldName" matches the name of an attribute/key and "$operation" is one of the following:
+You specify the filter operations by passing arguments of $fieldName\_\_$operation.
+
+Example: e.x. results = objs.filter(name\_\_ne='Tim') 
+
+where "$fieldName" matches the name of an attribute/key and "$operation" is one of the following:
 
 
 Operations
