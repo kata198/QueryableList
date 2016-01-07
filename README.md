@@ -56,6 +56,12 @@ Operations
 * notcontainsAny - Test that the item's field value does not contain any of the items in the provided list ( using "not in" )
 
 
+Full Documentation
+------------------
+
+Pydoc documentation can be found at: http://htmlpreview.github.io/?https://github.com/kata198/QueryableList/blob/master/doc/QueryableList.html?vers=1
+
+
 Example
 -------
 
