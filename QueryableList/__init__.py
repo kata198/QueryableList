@@ -72,19 +72,20 @@ from .Base import QueryableListBase
 
 
 class QueryableListObjs(QueryableListBase):
+    '''
+        QueryableListObjs - QueryableList where each item extends object (or implements __getattribute__)
+    '''
 
 #    _get_item_value = getattr
 
     @staticmethod
     def _get_item_value(item, fieldName):
-        if hasattr(item, fieldName):
-            return getattr(item, fieldName)
-        return None
+        return getattr(item, fieldName, None)
 
 
 class QueryableListDicts(QueryableListBase):
     '''
-        QueryableListDicts - QueryableList where each item is or extends dict (or implements __getitem__)
+        QueryableListDicts - QueryableList where each item is or extends dict (or implements __getitem__ and __contains__)
     '''
 
 
@@ -93,3 +94,5 @@ class QueryableListDicts(QueryableListBase):
         if fieldName in item:
             return item[fieldName]
         return None
+
+
