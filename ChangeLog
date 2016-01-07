@@ -6,6 +6,7 @@
 - Implement subtraction for QueryableList (not present in list)
 - Treat the lack of a field as None/null. This adds a slight overhead, but really simplifies filtering on multiple object types
 - Speed up some access
+- Add QueryableListMixed which is slightly slower, but supports both dict-like and object-like access. Use if you don't know in advance, or you need to support both in the same list.
 
 * 1.0.0 - Jan 6 2016
 - First Release

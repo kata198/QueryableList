@@ -10,7 +10,11 @@
 
         QueryableListObjs - This assumes each item is an object [or implements __getattribute__].
 
-        QueryableListDicts - This assumes that each item is a dict [or implements __getitem__].
+        QueryableListDicts - This assumes that each item is a dict [or implements __getitem__ and __contains__].
+
+        QueryableListMixed - QueryableList which can contain dict-like objects (implementing __getitem__ and __contains__) or object-like objects (implementing __getattribute__)
+
+            This is somewhat slower than using QueryableListObjs or QueryableListDicts directly, but use it if you need to mix, or need to support either type.
 
 
     You can filter these objects by using the method "filterAnd" (or its alias, "filter"), or "filterOr".
@@ -96,3 +100,16 @@ class QueryableListDicts(QueryableListBase):
         return None
 
 
+class QueryableListMixed(QueryableListBase):
+    '''
+        QueryableListMixed - QueryableList which can contain dict-like objects (implementing __getitem__ and __contains__) or object-like objects (implementing __getattribute__)
+        
+            This is somewhat slower than using QueryableListObjs or QueryableListDicts directly, but use it if you need to mix, or need to support either type.
+    '''
+
+    @staticmethod
+    def _get_item_value(item, fieldName):
+        if hasattr(item, '__getitem__'):
+            return QueryableListDicts._get_item_value(item, fieldName)
+
+        return QueryableListObjs._get_item_value(item, fieldName)

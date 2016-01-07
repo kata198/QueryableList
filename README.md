@@ -9,6 +9,8 @@ Use through one of the list-type extending classes:
 
 **QueryableListDicts** - This assumes that each item is a dict [or implements \_\_getitem\_\_].
 
+**QueryableListMixed** - QueryableList which can contain dict-like objects (implementing \_\_getitem\_\_ and \_\_contains\_\_) or object-like objects (implementing \_\_getattribute\_\_).
+    This is somewhat slower than using QueryableListObjs or QueryableListDicts directly, but use it if you need to mix, or need to support either type.
 
 You can filter these objects by using the method "filterAnd" (or its alias, "filter"), or "filterOr".
 
