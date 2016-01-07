@@ -7,7 +7,7 @@
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>QueryableList</strong></big></big></font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>QueryableList</strong></big></big> (version 1.1.0)</font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href="QueryableList.html">index</a><br></font></td></tr></table>
     <p><tt>QueryableList&nbsp;-&nbsp;Add&nbsp;support&nbsp;for&nbsp;ORM-style&nbsp;filtering&nbsp;to&nbsp;any&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;of&nbsp;items.<br>
@@ -18,7 +18,11 @@ Use&nbsp;through&nbsp;one&nbsp;of&nbsp;the&nbsp;<a href="__builtin__.html#list">
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#QueryableListObjs">QueryableListObjs</a>&nbsp;-&nbsp;This&nbsp;assumes&nbsp;each&nbsp;item&nbsp;is&nbsp;an&nbsp;object&nbsp;[or&nbsp;implements&nbsp;__getattribute__].<br>
 &nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#QueryableListDicts">QueryableListDicts</a>&nbsp;-&nbsp;This&nbsp;assumes&nbsp;that&nbsp;each&nbsp;item&nbsp;is&nbsp;a&nbsp;dict&nbsp;[or&nbsp;implements&nbsp;__getitem__].<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#QueryableListDicts">QueryableListDicts</a>&nbsp;-&nbsp;This&nbsp;assumes&nbsp;that&nbsp;each&nbsp;item&nbsp;is&nbsp;a&nbsp;dict&nbsp;[or&nbsp;implements&nbsp;__getitem__&nbsp;and&nbsp;__contains__].<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;QueryableListMixed&nbsp;-&nbsp;QueryableList&nbsp;which&nbsp;can&nbsp;contain&nbsp;dict-like&nbsp;items&nbsp;or&nbsp;object-like&nbsp;items&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;somewhat&nbsp;slower&nbsp;than&nbsp;using&nbsp;<a href="#QueryableListObjs">QueryableListObjs</a>&nbsp;or&nbsp;<a href="#QueryableListDicts">QueryableListDicts</a>&nbsp;directly,&nbsp;but&nbsp;use&nbsp;it&nbsp;if&nbsp;you&nbsp;need&nbsp;to&nbsp;mix,&nbsp;or&nbsp;need&nbsp;to&nbsp;support&nbsp;either&nbsp;type.<br>
 &nbsp;<br>
 &nbsp;<br>
 You&nbsp;can&nbsp;filter&nbsp;these&nbsp;objects&nbsp;by&nbsp;using&nbsp;the&nbsp;method&nbsp;"filterAnd"&nbsp;(or&nbsp;its&nbsp;alias,&nbsp;"filter"),&nbsp;or&nbsp;"filterOr".<br>
@@ -26,7 +30,11 @@ You&nbsp;can&nbsp;filter&nbsp;these&nbsp;objects&nbsp;by&nbsp;using&nbsp;the&nbs
 filterAnd&nbsp;returns&nbsp;a&nbsp;QueryableList&nbsp;where&nbsp;each&nbsp;item&nbsp;matches&nbsp;ALL&nbsp;of&nbsp;the&nbsp;provided&nbsp;criteria.<br>
 filterOr&nbsp;returns&nbsp;a&nbsp;QueryableList&nbsp;where&nbsp;each&nbsp;item&nbsp;matches&nbsp;ANY&nbsp;of&nbsp;the&nbsp;provided&nbsp;criteria.<br>
 &nbsp;<br>
-You&nbsp;specify&nbsp;the&nbsp;filter&nbsp;operations&nbsp;by&nbsp;passing&nbsp;arguments&nbsp;of&nbsp;$fieldName__$operation&nbsp;(e.x.&nbsp;results&nbsp;=&nbsp;objs.filter(name__ne='Tim')&nbsp;),&nbsp;where&nbsp;"$fieldName"&nbsp;matches&nbsp;the&nbsp;name&nbsp;of&nbsp;an&nbsp;attribute/key&nbsp;and&nbsp;"$operation"&nbsp;is&nbsp;one&nbsp;of&nbsp;the&nbsp;following:<br>
+You&nbsp;specify&nbsp;the&nbsp;filter&nbsp;operations&nbsp;by&nbsp;passing&nbsp;arguments&nbsp;of&nbsp;$fieldName__$operation<br>
+&nbsp;<br>
+Example:&nbsp;results&nbsp;=&nbsp;objs.filter(name__ne='Tim')<br>
+&nbsp;<br>
+where&nbsp;"$fieldName"&nbsp;matches&nbsp;the&nbsp;name&nbsp;of&nbsp;an&nbsp;attribute/key&nbsp;and&nbsp;"$operation"&nbsp;is&nbsp;one&nbsp;of&nbsp;the&nbsp;following:<br>
 &nbsp;<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;eq&nbsp;-&nbsp;Test&nbsp;equality&nbsp;(&nbsp;=&nbsp;operator&nbsp;)<br>
@@ -61,7 +69,10 @@ You&nbsp;specify&nbsp;the&nbsp;filter&nbsp;operations&nbsp;by&nbsp;passing&nbsp;
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;containsAny&nbsp;-&nbsp;Test&nbsp;that&nbsp;the&nbsp;item's&nbsp;field&nbsp;value&nbsp;contains&nbsp;any&nbsp;of&nbsp;the&nbsp;items&nbsp;in&nbsp;the&nbsp;provided&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;(&nbsp;using&nbsp;"in"&nbsp;)<br>
 &nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;notcontainsAny&nbsp;-&nbsp;Test&nbsp;that&nbsp;the&nbsp;item's&nbsp;field&nbsp;value&nbsp;does&nbsp;not&nbsp;contain&nbsp;any&nbsp;of&nbsp;the&nbsp;items&nbsp;in&nbsp;the&nbsp;provided&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;(&nbsp;using&nbsp;"not&nbsp;in"&nbsp;)</tt></p>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;notcontainsAny&nbsp;-&nbsp;Test&nbsp;that&nbsp;the&nbsp;item's&nbsp;field&nbsp;value&nbsp;does&nbsp;not&nbsp;contain&nbsp;any&nbsp;of&nbsp;the&nbsp;items&nbsp;in&nbsp;the&nbsp;provided&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;(&nbsp;using&nbsp;"not&nbsp;in"&nbsp;)<br>
+&nbsp;<br>
+&nbsp;<br>
+If&nbsp;a&nbsp;member&nbsp;of&nbsp;the&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;does&nbsp;not&nbsp;contain&nbsp;a&nbsp;field,&nbsp;the&nbsp;value&nbsp;is&nbsp;assigned&nbsp;"Null"&nbsp;for&nbsp;comparison&nbsp;purposes.</tt></p>
 <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
@@ -138,6 +149,10 @@ Data descriptors defined here:<br>
 <dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
 </dl>
 <hr>
+Data and other attributes inherited from <a href="__builtin__.html#list">__builtin__.list</a>:<br>
+<dl><dt><strong>__hash__</strong> = None</dl>
+
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#QueryableListBase-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -146,7 +161,7 @@ Data descriptors defined here:<br>
 <font color="#000000" face="helvetica, arial"><a name="QueryableListDicts">class <strong>QueryableListDicts</strong></a>(<a href="QueryableList.Base.html#QueryableListBase">QueryableList.Base.QueryableListBase</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2><tt><a href="#QueryableListDicts">QueryableListDicts</a>&nbsp;-&nbsp;QueryableList&nbsp;where&nbsp;each&nbsp;item&nbsp;is&nbsp;or&nbsp;extends&nbsp;dict&nbsp;(or&nbsp;implements&nbsp;__getitem__)<br>&nbsp;</tt></td></tr>
+<td colspan=2><tt><a href="#QueryableListDicts">QueryableListDicts</a>&nbsp;-&nbsp;QueryableList&nbsp;where&nbsp;each&nbsp;item&nbsp;is&nbsp;or&nbsp;extends&nbsp;dict&nbsp;(or&nbsp;implements&nbsp;__getitem__&nbsp;and&nbsp;__contains__)<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%"><dl><dt>Method resolution order:</dt>
 <dd><a href="QueryableList.html#QueryableListDicts">QueryableListDicts</a></dd>
@@ -189,7 +204,6 @@ Data descriptors inherited from <a href="QueryableList.Base.html#QueryableListBa
 <dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
 </dl>
 <hr>
-
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
@@ -207,6 +221,7 @@ Data descriptors inherited from <a href="QueryableList.Base.html#QueryableListBa
 </dl>
 <hr>
 Methods inherited from <a href="QueryableList.Base.html#QueryableListBase">QueryableList.Base.QueryableListBase</a>:<br>
+
 <dl><dt><a name="QueryableListObjs-filter"><strong>filter</strong></a> = filterAnd(self, **kwargs)</dt><dd><tt>filter/filterAnd&nbsp;-&nbsp;Performs&nbsp;a&nbsp;filter&nbsp;and&nbsp;returns&nbsp;a&nbsp;QueryableList&nbsp;object&nbsp;of&nbsp;the&nbsp;same&nbsp;type.<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;All&nbsp;the&nbsp;provided&nbsp;filters&nbsp;must&nbsp;match&nbsp;for&nbsp;the&nbsp;item&nbsp;to&nbsp;be&nbsp;returned.<br>
@@ -240,7 +255,6 @@ Data descriptors inherited from <a href="QueryableList.Base.html#QueryableListBa
 <dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
 </dl>
 <hr>
-
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">
@@ -249,5 +263,7 @@ Data descriptors inherited from <a href="QueryableList.Base.html#QueryableListBa
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><strong>FILTER_TYPES</strong> = set(['contains', 'containsAny', 'eq', 'gt', 'gte', 'ieq', ...])<br>
-<strong>__all__</strong> = ('FILTER_TYPES', 'QueryableListObjs', 'QueryableListDicts', 'QueryableListBase')</td></tr></table>
+<strong>__all__</strong> = ('FILTER_TYPES', 'QueryableListObjs', 'QueryableListDicts', 'QueryableListBase')<br>
+<strong>__version__</strong> = '1.1.0'<br>
+<strong>__version_tuple__</strong> = (1, 1, 0)</td></tr></table>
 </body></html>

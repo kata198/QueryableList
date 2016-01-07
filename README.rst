@@ -79,7 +79,7 @@ Operations
 Full Documentation
 ------------------
 
-Pydoc documentation can be found at: http://htmlpreview.github.io/?https://github.com/kata198/QueryableList/blob/master/doc/QueryableList.html?vers=1
+Pydoc documentation can be found at: http://htmlpreview.github.io/?https://github.com/kata198/QueryableList/blob/master/doc/QueryableList.html?vers=2
 
 
 Example
