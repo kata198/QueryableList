@@ -146,9 +146,10 @@ Here is an example with some simple, silly data, doing some filters, followed by
 
 		sys.stdout.write("Data: %s\n\n" %(data,))
 
+
 		sys.stdout.write('People who are over 22 years old:\n%s\n\n' %(data.filter(age__gt=22),))
 
-		#sys.stdout.write('People who like puppies or bricks, and their favourite colour is purple:\n\n' %(data.filter(likes__containsAny=('puppies', 'bricks')).filter(colour__ieq='purple'),))
+
 		sys.stdout.write('People who like puppies or bricks, and their favourite colour is purple:\n%s\n\n' %(data.filter(likes__containsAny=('puppies', 'bricks'), colour__ieq='purple'),))
 
 
@@ -161,20 +162,24 @@ Here is an example with some simple, silly data, doing some filters, followed by
 
 **Results:**
 
+
 	Data: QueryableListObjs([{'colour': 'purple', 'likes': ['puppies', 'rainbows'], 'age': 31, 'name': 'Tim'}, {'colour': None, 'likes': ['puppies', 'cars'], 'age': 19, 'name': 'Joe'}, {'colour': 'PURPLE', 'likes': ['cheese', 'books'], 'age': 23, 'name': 'Joe'}])
 
 
 	People who are over 22 years old:
+
 
 	QueryableListObjs([{'colour': 'purple', 'likes': ['puppies', 'rainbows'], 'age': 31, 'name': 'Tim'}, {'colour': 'PURPLE', 'likes': ['cheese', 'books'], 'age': 23, 'name': 'Joe'}])
 
 
 	People who like puppies or bricks, and their favourite colour is purple:
 
+
 	QueryableListObjs([{'colour': 'purple', 'likes': ['puppies', 'rainbows'], 'age': 31, 'name': 'Tim'}])
 
 
 	People who are at least 30 years old or like cheese:
+
 
 	QueryableListObjs([{'colour': 'purple', 'likes': ['puppies', 'rainbows'], 'age': 31, 'name': 'Tim'}, {'colour': 'PURPLE', 'likes': ['cheese', 'books'], 'age': 23, 'name': 'Joe'}])
 
