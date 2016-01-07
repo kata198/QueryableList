@@ -1,2 +1,9 @@
-* 1.0.0 - Jan 1 2016
+* 1.1.0 - Jan 7 2016
+- Implement inherited list methods which would return list, and make them return the same QueryableList type as the owning class
+- Add the QueryableList name to __repr__, so it can be used to reconstruct / is visible
+- Add __version__ and __version_tuple__ tags
+- Remove one method of indirection in QueryableListObjs
+- Implement subtraction for QueryableList (not present in list)
+
+* 1.0.0 - Jan 6 2016
 - First Release

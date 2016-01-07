@@ -59,6 +59,9 @@
 
 __all__ = ('FILTER_TYPES', 'QueryableListObjs', 'QueryableListDicts', 'QueryableListBase')
 
+__version__ = '1.1.0'
+__version_tuple__ = (1, 1, 0)
+
 # FILTER_TYPES - All available filter types
 FILTER_TYPES = {'eq', 'ieq', 'ne', 'ine', 'lt', 'gt', 'lte', 'gte', 'isnull', 'is', 'isnot', 'in', 'notin', 'contains', 'notcontains', 'containsAny', 'notcontainsAny'}
 
