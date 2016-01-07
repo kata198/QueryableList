@@ -1,0 +1,9 @@
+recursive-include doc *.html
+recursive-include QueryableList *.py
+include Changelog
+include example.py
+include README.md
+include README.rst
+include LICENSE
+include MANIFEST.in
+include setup.py
