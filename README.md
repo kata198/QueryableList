@@ -13,6 +13,7 @@ Use through one of the list-type extending classes:
 You can filter these objects by using the method "filterAnd" (or its alias, "filter"), or "filterOr".
 
 *filterAnd* - returns a QueryableList where each item matches ALL of the provided criteria.
+
 *filterOr* - returns a QueryableList where each item matches ANY of the provided criteria.
 
 
@@ -20,6 +21,7 @@ The QueryableList types support all the operations of a list, and return the sam
 
 Items filtered do not need to be of the same type.
 If you filter on a field and it is not present on a member, the value of that field is assumed None (null) for comparison purposes.
+
 
 You specify the filter operations by passing arguments of $fieldName\_\_$operation (e.x. results = objs.filter(name\_\_ne='Tim') ), where "$fieldName" matches the name of an attribute/key and "$operation" is one of the following:
 
