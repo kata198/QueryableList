@@ -1,19 +1,25 @@
 # QueryableList
-Python module to add support for ORM-style filtering to any list of items
+Python module to add support for ORM-style filtering to any list of items. You can use and chain multiple types of filter expressions without several loops in order to greatly simplify the filtering of objects.
 
 
 Use through one of the list-type extending classes:
 
 
-**QueryableListObjs** - This assumes each item is an object [or implements \_\_getattribute\_\_].
+**QueryableListObjs** - This assumes each item extends object [or implements \_\_getattribute\_\_].
 
 **QueryableListDicts** - This assumes that each item is a dict [or implements \_\_getitem\_\_].
 
 
 You can filter these objects by using the method "filterAnd" (or its alias, "filter"), or "filterOr".
 
-filterAnd returns a QueryableList where each item matches ALL of the provided criteria.
-filterOr returns a QueryableList where each item matches ANY of the provided criteria.
+*filterAnd* - returns a QueryableList where each item matches ALL of the provided criteria.
+*filterOr* - returns a QueryableList where each item matches ANY of the provided criteria.
+
+
+The QueryableList types support all the operations of a list, and return the same QueryableList types so you can perform chaining. QueryableList also supports subtraction, whereas normal lists do not.
+
+Items filtered do not need to be of the same type.
+If you filter on a field and it is not present on a member, the value of that field is assumed None (null) for comparison purposes.
 
 You specify the filter operations by passing arguments of $fieldName\_\_$operation (e.x. results = objs.filter(name\_\_ne='Tim') ), where "$fieldName" matches the name of an attribute/key and "$operation" is one of the following:
 
@@ -114,14 +120,14 @@ Here is an example with some simple, silly data, doing some filters, followed by
 
 **Results:**
 
-	Data: [{'colour': 'purple', 'likes': ['puppies', 'rainbows'], 'age': 31, 'name': 'Tim'}, {'colour': None, 'likes': ['puppies', 'cars'], 'age': 19, 'name': 'Joe'}, {'colour': 'PURPLE', 'likes': ['cheese', 'books'], 'age': 23, 'name': 'Joe'}]
+	Data: QueryableListObjs([{'colour': 'purple', 'likes': ['puppies', 'rainbows'], 'age': 31, 'name': 'Tim'}, {'colour': None, 'likes': ['puppies', 'cars'], 'age': 19, 'name': 'Joe'}, {'colour': 'PURPLE', 'likes': ['cheese', 'books'], 'age': 23, 'name': 'Joe'}])
 
 	People who are over 22 years old:
-	[{'colour': 'purple', 'likes': ['puppies', 'rainbows'], 'age': 31, 'name': 'Tim'}, {'colour': 'PURPLE', 'likes': ['cheese', 'books'], 'age': 23, 'name': 'Joe'}]
+	QueryableListObjs([{'colour': 'purple', 'likes': ['puppies', 'rainbows'], 'age': 31, 'name': 'Tim'}, {'colour': 'PURPLE', 'likes': ['cheese', 'books'], 'age': 23, 'name': 'Joe'}])
 
 	People who like puppies or bricks, and their favourite colour is purple:
-	[{'colour': 'purple', 'likes': ['puppies', 'rainbows'], 'age': 31, 'name': 'Tim'}]
+	QueryableListObjs([{'colour': 'purple', 'likes': ['puppies', 'rainbows'], 'age': 31, 'name': 'Tim'}])
 
 	People who are at least 30 years old or like cheese:
-	[{'colour': 'purple', 'likes': ['puppies', 'rainbows'], 'age': 31, 'name': 'Tim'}, {'colour': 'PURPLE', 'likes': ['cheese', 'books'], 'age': 23, 'name': 'Joe'}]
+	QueryableListObjs([{'colour': 'purple', 'likes': ['puppies', 'rainbows'], 'age': 31, 'name': 'Tim'}, {'colour': 'PURPLE', 'likes': ['cheese', 'books'], 'age': 23, 'name': 'Joe'}])
 
