@@ -70,15 +70,18 @@ class QueryableListObjs(QueryableListBase):
         QueryableListObjs - QueryableList where each item extends object (or implements __getattribute__)
     '''
 
-    @staticmethod
-    def _get_item_value(item, fieldName):
-        return getattr(item, fieldName)
+    _get_item_value = getattr
+
+#    @staticmethod
+#    def _get_item_value(item, fieldName):
+#        return getattr(item, fieldName)
 
 
 class QueryableListDicts(QueryableListBase):
     '''
         QueryableListDicts - QueryableList where each item is or extends dict (or implements __getitem__)
     '''
+
 
     @staticmethod
     def _get_item_value(item, fieldName):

@@ -506,4 +506,32 @@ class QueryableListBase(list):
 
         return ret
 
+    ################################################
+    ##     List overrides to return same type     ##
+    ################################################
+
+    def __add__(self, other):
+        return self.__class__(list.__add__(self, other))
+
+    def __iadd__(self, other):
+        return self.__class__(list.__iadd__(self, other))
+
+    def __getslice__(self, start, end):
+        return self.__class__(list.__getslice__(self, start, end))
+
+    def __repr__(self):
+        return "%s(%s)" %(self.__class__.__name__, list.__repr__(self))
+
+    ################################################
+    ##     Extras that list doesn't support       ##
+    ################################################
+
+    def __sub__(self, other):
+        myCopy = self[:]
+        for item in other:
+            try:
+                myCopy.remove(item)
+            except:
+                pass
+        return myCopy
 
