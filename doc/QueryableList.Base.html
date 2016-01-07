@@ -1,0 +1,192 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module QueryableList.Base</title>
+<meta charset="utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="QueryableList.html"><font color="#ffffff">QueryableList</font></a>.Base</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href="QueryableList.html">index</a><br></font></td></tr></table>
+    <p><tt>#&nbsp;Copyright&nbsp;(c)&nbsp;2016&nbsp;Timothy&nbsp;Savannah&nbsp;under&nbsp;the&nbsp;terms&nbsp;of&nbsp;the&nbsp;GNU&nbsp;Lesser&nbsp;General&nbsp;Public&nbsp;License&nbsp;version&nbsp;2.1.<br>
+#&nbsp;&nbsp;You&nbsp;should&nbsp;have&nbsp;received&nbsp;a&nbsp;copy&nbsp;of&nbsp;this&nbsp;as&nbsp;"LICENSE"&nbsp;with&nbsp;this&nbsp;source&nbsp;distribution.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="re.html">re</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#list">__builtin__.list</a>(<a href="__builtin__.html#object">__builtin__.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="QueryableList.Base.html#QueryableListBase">QueryableListBase</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="QueryableListBase">class <strong>QueryableListBase</strong></a>(<a href="__builtin__.html#list">__builtin__.list</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#QueryableListBase">QueryableListBase</a>&nbsp;-&nbsp;The&nbsp;base&nbsp;implementation&nbsp;of&nbsp;a&nbsp;QueryableList.&nbsp;<br>
+&nbsp;<br>
+Any&nbsp;implementing&nbsp;classes&nbsp;should&nbsp;only&nbsp;have&nbsp;to&nbsp;implement&nbsp;the&nbsp;"_get_item_value(item,&nbsp;fieldName)"&nbsp;method,&nbsp;to&nbsp;return&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;given&nbsp;field&nbsp;on&nbsp;an&nbsp;item.<br>
+&nbsp;<br>
+You&nbsp;cannot&nbsp;use&nbsp;this&nbsp;directly,&nbsp;instead&nbsp;use&nbsp;one&nbsp;of&nbsp;the&nbsp;implementing&nbsp;classes&nbsp;(like&nbsp;QueryableListDicts&nbsp;or&nbsp;QueryableListObjs),&nbsp;or&nbsp;your&nbsp;own&nbsp;implementing&nbsp;class.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="QueryableList.Base.html#QueryableListBase">QueryableListBase</a></dd>
+<dd><a href="__builtin__.html#list">__builtin__.list</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="QueryableListBase-filter"><strong>filter</strong></a> = <a href="#QueryableListBase-filterAnd">filterAnd</a>(self, **kwargs)</dt></dl>
+
+<dl><dt><a name="QueryableListBase-filterAnd"><strong>filterAnd</strong></a>(self, **kwargs)</dt><dd><tt>filter/filterAnd&nbsp;-&nbsp;Performs&nbsp;a&nbsp;filter&nbsp;and&nbsp;returns&nbsp;a&nbsp;QueryableList&nbsp;object&nbsp;of&nbsp;the&nbsp;same&nbsp;type.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;All&nbsp;the&nbsp;provided&nbsp;filters&nbsp;must&nbsp;match&nbsp;for&nbsp;the&nbsp;item&nbsp;to&nbsp;be&nbsp;returned.<br>
+&nbsp;<br>
+@params&nbsp;are&nbsp;in&nbsp;the&nbsp;format&nbsp;of&nbsp;fieldName__operation=value&nbsp;&nbsp;where&nbsp;fieldName&nbsp;is&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;field&nbsp;on&nbsp;any&nbsp;given&nbsp;item,&nbsp;"operation"&nbsp;is&nbsp;one&nbsp;of&nbsp;the&nbsp;given&nbsp;operations&nbsp;(@see&nbsp;main&nbsp;documentation)&nbsp;(e.x.&nbsp;eq,&nbsp;ne,&nbsp;isnull),&nbsp;and&nbsp;value&nbsp;is&nbsp;what&nbsp;is&nbsp;used&nbsp;in&nbsp;the&nbsp;operation.<br>
+&nbsp;<br>
+@return&nbsp;-&nbsp;A&nbsp;QueryableList&nbsp;object&nbsp;of&nbsp;the&nbsp;same&nbsp;type,&nbsp;with&nbsp;only&nbsp;the&nbsp;matching&nbsp;objects&nbsp;returned.</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-filterOr"><strong>filterOr</strong></a>(self, **kwargs)</dt><dd><tt>filterOr&nbsp;-&nbsp;Performs&nbsp;a&nbsp;filter&nbsp;and&nbsp;returns&nbsp;a&nbsp;QueryableList&nbsp;object&nbsp;of&nbsp;the&nbsp;same&nbsp;type.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Anythe&nbsp;provided&nbsp;filters&nbsp;can&nbsp;match&nbsp;for&nbsp;the&nbsp;item&nbsp;to&nbsp;be&nbsp;returned.<br>
+&nbsp;<br>
+@params&nbsp;are&nbsp;in&nbsp;the&nbsp;format&nbsp;of&nbsp;fieldName__operation=value&nbsp;&nbsp;where&nbsp;fieldName&nbsp;is&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;field&nbsp;on&nbsp;any&nbsp;given&nbsp;item,&nbsp;"operation"&nbsp;is&nbsp;one&nbsp;of&nbsp;the&nbsp;given&nbsp;operations&nbsp;(@see&nbsp;main&nbsp;documentation)&nbsp;(e.x.&nbsp;eq,&nbsp;ne,&nbsp;isnull),&nbsp;and&nbsp;value&nbsp;is&nbsp;what&nbsp;is&nbsp;used&nbsp;in&nbsp;the&nbsp;operation.<br>
+&nbsp;<br>
+@return&nbsp;-&nbsp;A&nbsp;QueryableList&nbsp;object&nbsp;of&nbsp;the&nbsp;same&nbsp;type,&nbsp;with&nbsp;only&nbsp;the&nbsp;matching&nbsp;objects&nbsp;returned.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="__builtin__.html#list">__builtin__.list</a>:<br>
+<dl><dt><a name="QueryableListBase-__add__"><strong>__add__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__add__">__add__</a>(y)&nbsp;&lt;==&gt;&nbsp;x+y</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__contains__"><strong>__contains__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__contains__">__contains__</a>(y)&nbsp;&lt;==&gt;&nbsp;y&nbsp;in&nbsp;x</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__delitem__"><strong>__delitem__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__delitem__">__delitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;del&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__delslice__"><strong>__delslice__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__delslice__">__delslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;del&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__eq__"><strong>__eq__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__eq__">__eq__</a>(y)&nbsp;&lt;==&gt;&nbsp;x==y</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__ge__"><strong>__ge__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__ge__">__ge__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;=y</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__gt__"><strong>__gt__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__gt__">__gt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;y</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__iadd__"><strong>__iadd__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__iadd__">__iadd__</a>(y)&nbsp;&lt;==&gt;&nbsp;x+=y</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__imul__"><strong>__imul__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__imul__">__imul__</a>(y)&nbsp;&lt;==&gt;&nbsp;x*=y</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__iter__"><strong>__iter__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__iter__">__iter__</a>()&nbsp;&lt;==&gt;&nbsp;iter(x)</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__le__"><strong>__le__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__le__">__le__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;=y</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__len__"><strong>__len__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__len__">__len__</a>()&nbsp;&lt;==&gt;&nbsp;len(x)</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__lt__"><strong>__lt__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__lt__">__lt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;y</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__mul__"><strong>__mul__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__mul__">__mul__</a>(n)&nbsp;&lt;==&gt;&nbsp;x*n</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__ne__"><strong>__ne__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__ne__">__ne__</a>(y)&nbsp;&lt;==&gt;&nbsp;x!=y</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__reversed__"><strong>__reversed__</strong></a>(...)</dt><dd><tt>L.<a href="#QueryableListBase-__reversed__">__reversed__</a>()&nbsp;--&nbsp;return&nbsp;a&nbsp;reverse&nbsp;iterator&nbsp;over&nbsp;the&nbsp;<a href="__builtin__.html#list">list</a></tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__rmul__"><strong>__rmul__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__rmul__">__rmul__</a>(n)&nbsp;&lt;==&gt;&nbsp;n*x</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__setitem__"><strong>__setitem__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__setitem__">__setitem__</a>(i,&nbsp;y)&nbsp;&lt;==&gt;&nbsp;x[i]=y</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__setslice__"><strong>__setslice__</strong></a>(...)</dt><dd><tt>x.<a href="#QueryableListBase-__setslice__">__setslice__</a>(i,&nbsp;j,&nbsp;y)&nbsp;&lt;==&gt;&nbsp;x[i:j]=y<br>
+&nbsp;<br>
+Use&nbsp;&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-__sizeof__"><strong>__sizeof__</strong></a>(...)</dt><dd><tt>L.<a href="#QueryableListBase-__sizeof__">__sizeof__</a>()&nbsp;--&nbsp;size&nbsp;of&nbsp;L&nbsp;in&nbsp;memory,&nbsp;in&nbsp;bytes</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-append"><strong>append</strong></a>(...)</dt><dd><tt>L.<a href="#QueryableListBase-append">append</a>(object)&nbsp;--&nbsp;append&nbsp;object&nbsp;to&nbsp;end</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-count"><strong>count</strong></a>(...)</dt><dd><tt>L.<a href="#QueryableListBase-count">count</a>(value)&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;number&nbsp;of&nbsp;occurrences&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-extend"><strong>extend</strong></a>(...)</dt><dd><tt>L.<a href="#QueryableListBase-extend">extend</a>(iterable)&nbsp;--&nbsp;extend&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;by&nbsp;appending&nbsp;elements&nbsp;from&nbsp;the&nbsp;iterable</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-index"><strong>index</strong></a>(...)</dt><dd><tt>L.<a href="#QueryableListBase-index">index</a>(value,&nbsp;[start,&nbsp;[stop]])&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;first&nbsp;index&nbsp;of&nbsp;value.<br>
+Raises&nbsp;ValueError&nbsp;if&nbsp;the&nbsp;value&nbsp;is&nbsp;not&nbsp;present.</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-insert"><strong>insert</strong></a>(...)</dt><dd><tt>L.<a href="#QueryableListBase-insert">insert</a>(index,&nbsp;object)&nbsp;--&nbsp;insert&nbsp;object&nbsp;before&nbsp;index</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-pop"><strong>pop</strong></a>(...)</dt><dd><tt>L.<a href="#QueryableListBase-pop">pop</a>([index])&nbsp;-&gt;&nbsp;item&nbsp;--&nbsp;remove&nbsp;and&nbsp;return&nbsp;item&nbsp;at&nbsp;index&nbsp;(default&nbsp;last).<br>
+Raises&nbsp;IndexError&nbsp;if&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;is&nbsp;empty&nbsp;or&nbsp;index&nbsp;is&nbsp;out&nbsp;of&nbsp;range.</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-remove"><strong>remove</strong></a>(...)</dt><dd><tt>L.<a href="#QueryableListBase-remove">remove</a>(value)&nbsp;--&nbsp;remove&nbsp;first&nbsp;occurrence&nbsp;of&nbsp;value.<br>
+Raises&nbsp;ValueError&nbsp;if&nbsp;the&nbsp;value&nbsp;is&nbsp;not&nbsp;present.</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-reverse"><strong>reverse</strong></a>(...)</dt><dd><tt>L.<a href="#QueryableListBase-reverse">reverse</a>()&nbsp;--&nbsp;reverse&nbsp;*IN&nbsp;PLACE*</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-sort"><strong>sort</strong></a>(...)</dt><dd><tt>L.<a href="#QueryableListBase-sort">sort</a>(cmp=None,&nbsp;key=None,&nbsp;reverse=False)&nbsp;--&nbsp;stable&nbsp;sort&nbsp;*IN&nbsp;PLACE*;<br>
+cmp(x,&nbsp;y)&nbsp;-&gt;&nbsp;-1,&nbsp;0,&nbsp;1</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="__builtin__.html#list">__builtin__.list</a>:<br>
+<dl><dt><strong>__hash__</strong> = None</dl>
+
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#QueryableListBase-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-getFiltersFromArgs"><strong>getFiltersFromArgs</strong></a>(kwargs)</dt><dd><tt>getFiltersFromArgs&nbsp;-&nbsp;Returns&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;each&nbsp;filter&nbsp;type,&nbsp;and&nbsp;the&nbsp;corrosponding&nbsp;field/value<br>
+&nbsp;<br>
+@param&nbsp;kwargs&nbsp;&lt;dict&gt;&nbsp;-&nbsp;Dictionary&nbsp;of&nbsp;filter&nbsp;arguments<br>
+&nbsp;<br>
+&nbsp;<br>
+@return&nbsp;-&nbsp;Dictionary&nbsp;of&nbsp;each&nbsp;filter&nbsp;type&nbsp;(minus&nbsp;the&nbsp;ones&nbsp;that&nbsp;are&nbsp;optimized&nbsp;into&nbsp;others),&nbsp;each&nbsp;containing&nbsp;a&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;of&nbsp;tuples,&nbsp;(fieldName,&nbsp;matchingValue)</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>FILTER_PARAM_RE</strong> = &lt;_sre.SRE_Pattern object&gt;<br>
+<strong>__all__</strong> = ('FILTER_PARAM_RE', 'getFiltersFromArgs', 'QueryableListBase')</td></tr></table>
+</body></html>
