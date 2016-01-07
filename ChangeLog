@@ -4,6 +4,7 @@
 - Add __version__ and __version_tuple__ tags
 - Remove one method of indirection in QueryableListObjs
 - Implement subtraction for QueryableList (not present in list)
+- Treat the lack of a field as None/null. This adds a slight overhead, but really simplifies filtering on multiple object types
 
 * 1.0.0 - Jan 6 2016
 - First Release

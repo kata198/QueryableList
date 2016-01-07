@@ -55,6 +55,9 @@
 
         * notcontainsAny - Test that the item's field value does not contain any of the items in the provided list ( using "not in" )
 
+
+    If a member of the list does not contain a field, the value is assigned "Null" for comparison purposes.
+
 '''
 
 __all__ = ('FILTER_TYPES', 'QueryableListObjs', 'QueryableListDicts', 'QueryableListBase')
@@ -69,15 +72,14 @@ from .Base import QueryableListBase
 
 
 class QueryableListObjs(QueryableListBase):
-    '''
-        QueryableListObjs - QueryableList where each item extends object (or implements __getattribute__)
-    '''
 
-    _get_item_value = getattr
+#    _get_item_value = getattr
 
-#    @staticmethod
-#    def _get_item_value(item, fieldName):
-#        return getattr(item, fieldName)
+    @staticmethod
+    def _get_item_value(item, fieldName):
+        if hasattr(item, fieldName):
+            return getattr(item, fieldName)
+        return None
 
 
 class QueryableListDicts(QueryableListBase):
@@ -88,4 +90,6 @@ class QueryableListDicts(QueryableListBase):
 
     @staticmethod
     def _get_item_value(item, fieldName):
-        return item[fieldName]
+        if fieldName in item:
+            return item[fieldName]
+        return None
