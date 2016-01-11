@@ -7,7 +7,7 @@
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>QueryableList</strong></big></big> (version 1.1.0)</font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>QueryableList</strong></big></big> (version 1.2.0)</font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href="QueryableList.html">index</a><br></font></td></tr></table>
     <p><tt>QueryableList&nbsp;-&nbsp;Add&nbsp;support&nbsp;for&nbsp;ORM-style&nbsp;filtering&nbsp;to&nbsp;any&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;of&nbsp;items.<br>
@@ -70,6 +70,16 @@ where&nbsp;"$fieldName"&nbsp;matches&nbsp;the&nbsp;name&nbsp;of&nbsp;an&nbsp;att
 &nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;containsAny&nbsp;-&nbsp;Test&nbsp;that&nbsp;the&nbsp;item's&nbsp;field&nbsp;value&nbsp;contains&nbsp;any&nbsp;of&nbsp;the&nbsp;items&nbsp;in&nbsp;the&nbsp;provided&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;(&nbsp;using&nbsp;"in"&nbsp;)<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;notcontainsAny&nbsp;-&nbsp;Test&nbsp;that&nbsp;the&nbsp;item's&nbsp;field&nbsp;value&nbsp;does&nbsp;not&nbsp;contain&nbsp;any&nbsp;of&nbsp;the&nbsp;items&nbsp;in&nbsp;the&nbsp;provided&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;(&nbsp;using&nbsp;"not&nbsp;in"&nbsp;)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;splitcontains&nbsp;-&nbsp;Takes&nbsp;a&nbsp;tuple,&nbsp;(splitBy&lt;str&gt;,&nbsp;containsThis&lt;str&gt;).&nbsp;Use&nbsp;for&nbsp;a&nbsp;string&nbsp;that&nbsp;represents&nbsp;a&nbsp;<a href="__builtin__.html#list">list</a>.&nbsp;The&nbsp;field&nbsp;will&nbsp;be&nbsp;split&nbsp;by&nbsp;the&nbsp;first,&nbsp;"splitBy",&nbsp;param,&nbsp;and&nbsp;the&nbsp;result&nbsp;tested&nbsp;that&nbsp;it&nbsp;contains&nbsp;an&nbsp;item&nbsp;matching&nbsp;the&nbsp;second,&nbsp;"containsThis",&nbsp;param.&nbsp;E.x.&nbsp;item__splitcontains=('&nbsp;',&nbsp;'someValue')<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;splitnotcontains&nbsp;-&nbsp;Takes&nbsp;a&nbsp;tuple,&nbsp;(splitBy&lt;str&gt;,&nbsp;containsThis&lt;str&gt;).&nbsp;Use&nbsp;for&nbsp;a&nbsp;string&nbsp;that&nbsp;represents&nbsp;a&nbsp;<a href="__builtin__.html#list">list</a>.&nbsp;The&nbsp;field&nbsp;will&nbsp;be&nbsp;split&nbsp;by&nbsp;the&nbsp;first,&nbsp;"splitBy",&nbsp;param,&nbsp;and&nbsp;the&nbsp;result&nbsp;tested&nbsp;that&nbsp;it&nbsp;does&nbsp;not&nbsp;contain&nbsp;an&nbsp;item&nbsp;matching&nbsp;the&nbsp;second,&nbsp;"containsThis",&nbsp;param.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;splitcontainsAny&nbsp;-&nbsp;Takes&nbsp;a&nbsp;tuple,&nbsp;(splitBy&lt;str&gt;,&nbsp;possibleMatches&nbsp;&lt;<a href="__builtin__.html#list">list</a>&lt;str&gt;&gt;).&nbsp;Use&nbsp;for&nbsp;a&nbsp;string&nbsp;that&nbsp;represents&nbsp;a&nbsp;<a href="__builtin__.html#list">list</a>.&nbsp;The&nbsp;field&nbsp;will&nbsp;be&nbsp;split&nbsp;by&nbsp;the&nbsp;first,&nbsp;"splitBy",&nbsp;param,&nbsp;and&nbsp;the&nbsp;result&nbsp;tested&nbsp;that&nbsp;it&nbsp;contains&nbsp;any&nbsp;of&nbsp;the&nbsp;tiems&nbsp;in&nbsp;the&nbsp;provided&nbsp;<a href="__builtin__.html#list">list</a>.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;splitnotcontainsAny&nbsp;-&nbsp;Takes&nbsp;a&nbsp;tuple,&nbsp;(splitBy&lt;str&gt;,&nbsp;possibleMatches&nbsp;&lt;<a href="__builtin__.html#list">list</a>&lt;str&gt;&gt;).&nbsp;Use&nbsp;for&nbsp;a&nbsp;string&nbsp;that&nbsp;represents&nbsp;a&nbsp;<a href="__builtin__.html#list">list</a>.&nbsp;The&nbsp;field&nbsp;will&nbsp;be&nbsp;split&nbsp;by&nbsp;the&nbsp;first,&nbsp;"splitBy",&nbsp;param,&nbsp;and&nbsp;the&nbsp;result&nbsp;tested&nbsp;that&nbsp;it&nbsp;does&nbsp;not&nbsp;contains&nbsp;any&nbsp;of&nbsp;the&nbsp;tiems&nbsp;in&nbsp;the&nbsp;provided&nbsp;<a href="__builtin__.html#list">list</a>.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
 &nbsp;<br>
 &nbsp;<br>
 If&nbsp;a&nbsp;member&nbsp;of&nbsp;the&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;does&nbsp;not&nbsp;contain&nbsp;a&nbsp;field,&nbsp;the&nbsp;value&nbsp;is&nbsp;assigned&nbsp;"Null"&nbsp;for&nbsp;comparison&nbsp;purposes.</tt></p>
@@ -264,6 +274,6 @@ Data descriptors inherited from <a href="QueryableList.Base.html#QueryableListBa
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><strong>FILTER_TYPES</strong> = set(['contains', 'containsAny', 'eq', 'gt', 'gte', 'ieq', ...])<br>
 <strong>__all__</strong> = ('FILTER_TYPES', 'QueryableListObjs', 'QueryableListDicts', 'QueryableListBase')<br>
-<strong>__version__</strong> = '1.1.0'<br>
-<strong>__version_tuple__</strong> = (1, 1, 0)</td></tr></table>
+<strong>__version__</strong> = '1.2.0'<br>
+<strong>__version_tuple__</strong> = (1, 2, 0)</td></tr></table>
 </body></html>
