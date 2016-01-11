@@ -63,6 +63,16 @@
 
         * notcontainsAny - Test that the item's field value does not contain any of the items in the provided list ( using "not in" )
 
+        * splitcontains - Takes a tuple, (splitBy<str>, containsThis<str>). Use for a string that represents a list. The field will be split by the first, "splitBy", param, and the result tested that it contains an item matching the second, "containsThis", param. E.x. item__splitcontains=(' ', 'someValue')
+
+
+        * splitnotcontains - Takes a tuple, (splitBy<str>, containsThis<str>). Use for a string that represents a list. The field will be split by the first, "splitBy", param, and the result tested that it does not contain an item matching the second, "containsThis", param.
+
+        * splitcontainsAny - Takes a tuple, (splitBy<str>, possibleMatches <list<str>>). Use for a string that represents a list. The field will be split by the first, "splitBy", param, and the result tested that it contains any of the tiems in the provided list.
+
+        * splitnotcontainsAny - Takes a tuple, (splitBy<str>, possibleMatches <list<str>>). Use for a string that represents a list. The field will be split by the first, "splitBy", param, and the result tested that it does not contains any of the tiems in the provided list.
+        
+
 
     If a member of the list does not contain a field, the value is assigned "Null" for comparison purposes.
 
@@ -74,7 +84,9 @@ __version__ = '1.1.0'
 __version_tuple__ = (1, 1, 0)
 
 # FILTER_TYPES - All available filter types
-FILTER_TYPES = {'eq', 'ieq', 'ne', 'ine', 'lt', 'gt', 'lte', 'gte', 'isnull', 'is', 'isnot', 'in', 'notin', 'contains', 'notcontains', 'containsAny', 'notcontainsAny'}
+FILTER_TYPES = {'eq', 'ieq', 'ne', 'ine', 'lt', 'gt', 'lte', 'gte', 'isnull', 'is', 'isnot', 
+    'in', 'notin', 'contains', 'notcontains', 'containsAny', 'notcontainsAny',
+    'splitcontains', 'splitnotcontains', 'splitcontainsAny', 'splitnotcontainsAny'}
 
 from .Base import QueryableListBase
 

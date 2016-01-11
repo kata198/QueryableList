@@ -37,6 +37,10 @@ def getFiltersFromArgs(kwargs):
         'notcontains' : [],
         'containsAny' : [],
         'notcontainsAny' : [],
+        'splitcontains' : [],
+        'splitnotcontains' : [],
+        'splitcontainsAny' : [],
+        'splitnotcontainsAny' : [],
     }
 
     for key, value in kwargs.items():
@@ -77,6 +81,10 @@ def getFiltersFromArgs(kwargs):
             # Optimization - if case-insensitive, lowercase the comparison value here
             elif filterType in ('ieq', 'ine'):
                 value = value.lower()
+            elif filterType.startswith('split'):
+                if (not issubclass(type(value), tuple) and not issubclass(type(value), list)) or len(value) != 2:
+                    raise ValueError('Filter type %s expects a tuple of two params. (splitBy, matchPortion)' %(filterType,))
+                
                 
 
         ret[filterType].append( (field, value) )
@@ -284,7 +292,7 @@ class QueryableListBase(list):
             for fieldName, value in filters['notcontainsAny']:
                 itemValue = self._get_item_value(item, fieldName)
                 didContain = False
-                for maybeContains in Value:
+                for maybeContains in value:
                     if maybeContains in itemValue:
                         didContain = True
                         break
@@ -295,6 +303,111 @@ class QueryableListBase(list):
             if keepIt is False:
                 continue
 
+            # IDEA: Could implement a dict here of last several splits, incase we have repeated splits on same large field.
+            #   I think this may be more lossy in the general case to support a corner case though.
+
+            for fieldName, value in filters['splitcontains']:
+                (splitBy, maybeContains) = value
+
+                itemValue = self._get_item_value(item, fieldName)
+
+                if itemValue is None:
+                    # Cannot split, no match
+                    keepIt = False
+                    break
+
+                try:
+                    itemValue = itemValue.split(splitBy)
+                    if maybeContains not in itemValue:
+                        keepIt = False
+                        break
+                except:
+                    # If field does not supprt "in", or cannot be split, it does not contain the item.
+                    keepIt = False
+                    break
+
+            if keepIt is False:
+                continue
+
+            for fieldName, value in filters['splitnotcontains']:
+                (splitBy, maybeContains) = value
+
+                itemValue = self._get_item_value(item, fieldName)
+
+                if itemValue is None:
+                    # Cannot split, so does not contain and is a match.
+                    continue
+
+                try:
+                    itemValue = itemValue.split(splitBy)
+                    if maybeContains in itemValue:
+                        keepIt = False
+                        break
+                except:
+                    # If field does not supprt "in", or cannot be split, it does not contain the item and thus matches here.
+                    continue
+
+            if keepIt is False:
+                continue
+
+            for fieldName, value in filters['splitcontainsAny']:
+                (splitBy, maybeContainsLst) = value
+
+                itemValue = self._get_item_value(item, fieldName)
+
+                if itemValue is None:
+                    # Cannot split, so it does not contain a match
+                    keepIt = False
+                    break
+
+                try:
+                    itemValue = itemValue.split(splitBy)
+                except:
+                    # Cannot split, does not match.
+                    keepIt = False
+                    break
+                    
+
+                didContain = False
+                for maybeContains in maybeContainsLst:
+                    if maybeContains in itemValue:
+                        didContain = True
+                        break
+                if didContain is False:
+                    keepIt = False
+                    break
+
+            if keepIt is False:
+                continue
+
+            for fieldName, value in filters['splitnotcontainsAny']:
+                (splitBy, maybeContainsLst) = value
+
+                itemValue = self._get_item_value(item, fieldName)
+
+                if itemValue is None:
+                    # Cannot split, so it must not contain any (and is a match)
+                    continue
+
+                try:
+                    itemValue = itemValue.split(splitBy)
+                except:
+                    # Cannot split, so must not contain any (and is a match)
+                    continue
+
+                didContain = False
+                for maybeContains in maybeContainsLst:
+                    if maybeContains in itemValue:
+                        didContain = True
+                        break
+                if didContain is True:
+                    keepIt = False
+                    break
+
+            if keepIt is False:
+                continue
+
+            # All the way through all filters, the item matches.
             ret.append(item)
 
         return ret
@@ -491,13 +604,126 @@ class QueryableListBase(list):
             for fieldName, value in filters['notcontainsAny']:
                 itemValue = self._get_item_value(item, fieldName)
                 didContain = False
-                for maybeContains in Value:
+                for maybeContains in value:
                     if maybeContains in itemValue:
                         didContain = True
                         break
                 if didContain is False:
                     keepIt = True
                     break
+
+            if keepIt is True:
+                ret.append(item)
+                continue
+
+
+            for fieldName, value in filters['splitcontains']:
+                (splitBy, maybeContains) = value
+
+                itemValue = self._get_item_value(item, fieldName)
+
+                if itemValue is None:
+                    # Cannot split, no match
+                    continue
+
+                try:
+                    itemValue = itemValue.split(splitBy)
+                    if maybeContains in itemValue:
+                        keepIt = True
+                        break
+                except:
+                    # If field does not supprt "in", or cannot be split, it does not contain the item.
+                    continue
+
+
+            if keepIt is True:
+                ret.append(item)
+                continue
+
+            for fieldName, value in filters['splitnotcontains']:
+                (splitBy, maybeContains) = value
+
+                itemValue = self._get_item_value(item, fieldName)
+
+                if itemValue is None:
+                    # Cannot split, so does not contain and is a match.
+                    keepIt = True
+                    break
+
+
+                try:
+                    itemValue = itemValue.split(splitBy)
+                    if maybeContains not in itemValue:
+                        keepIt = True
+                        break
+                except:
+                    # If field does not supprt "in", or cannot be split, it does not contain the item and thus matches here.
+                    keepIt = True
+                    break
+
+
+            if keepIt is True:
+                ret.append(item)
+                continue
+
+
+            for fieldName, value in filters['splitcontainsAny']:
+                (splitBy, maybeContainsLst) = value
+
+                itemValue = self._get_item_value(item, fieldName)
+
+                if itemValue is None:
+                    # Cannot split, so it does not contain a match
+                    continue
+
+                try:
+                    itemValue = itemValue.split(splitBy)
+                except:
+                    # Cannot split, does not match.
+                    continue
+                 
+   
+                didContain = False
+                for maybeContains in maybeContainsLst:
+                    if maybeContains in itemValue:
+                        didContain = True
+                        break
+
+                if didContain is True:
+                    keepIt = True
+                    break
+
+
+            if keepIt is True:
+                ret.append(item)
+                continue
+
+            for fieldName, value in filters['splitnotcontainsAny']:
+                (splitBy, maybeContainsLst) = value
+
+                itemValue = self._get_item_value(item, fieldName)
+
+                if itemValue is None:
+                    # Cannot split, so it must not contain any (and is a match)
+                    keepIt = True
+                    break
+
+                try:
+                    itemValue = itemValue.split(splitBy)
+                except:
+                    # Cannot split, so must not contain any (and is a match)
+                    keepIt = True
+                    break
+
+                didContain = False
+                for maybeContains in maybeContainsLst:
+                    if maybeContains in itemValue:
+                        didContain = True
+                        break
+                if didContain is False:
+                    keepIt = True
+                    break
+
 
             if keepIt is True:
                 ret.append(item)
