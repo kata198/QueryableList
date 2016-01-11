@@ -26,7 +26,7 @@ if __name__ == '__main__':
         long_description = summary
 
     setup(name='QueryableList',
-            version='1.1.0',
+            version='1.2.0',
             packages=['QueryableList'],
             author='Tim Savannah',
             author_email='kata198@gmail.com',
