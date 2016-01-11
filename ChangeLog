@@ -2,6 +2,7 @@
 - Fixed issue with notcontainsAny
 - Added new compare types that operate on lists stored as strings. All take a tuple, first argument is what to split by, second is what to match against (same type as the non-split equivalent comparison).
 New filters are: splitcontains, splitnotcontains, splitcontainsAny, splitnotcontainsAny
+- Fix the containsAny/notcontainsAny with a null value
 
 * 1.1.0 - Jan 7 2016
 - Implement inherited list methods which would return list, and make them return the same QueryableList type as the owning class

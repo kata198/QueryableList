@@ -277,6 +277,12 @@ class QueryableListBase(list):
 
             for fieldName, value in filters['containsAny']:
                 itemValue = self._get_item_value(item, fieldName)
+
+                if itemValue is None:
+                    # Cannot split None
+                    keepIt = False
+                    break
+
                 didContain = False
                 for maybeContains in value:
                     if maybeContains in itemValue:
@@ -291,6 +297,11 @@ class QueryableListBase(list):
 
             for fieldName, value in filters['notcontainsAny']:
                 itemValue = self._get_item_value(item, fieldName)
+
+                if itemValue is None:
+                    # Cannot split None, so it is a match..
+                    continue
+
                 didContain = False
                 for maybeContains in value:
                     if maybeContains in itemValue:
@@ -588,6 +599,11 @@ class QueryableListBase(list):
 
             for fieldName, value in filters['containsAny']:
                 itemValue = self._get_item_value(item, fieldName)
+
+                if itemValue is None:
+                    # None contains nothing, no match
+                    continue
+
                 didContain = False
                 for maybeContains in value:
                     if maybeContains in itemValue:
@@ -603,6 +619,12 @@ class QueryableListBase(list):
 
             for fieldName, value in filters['notcontainsAny']:
                 itemValue = self._get_item_value(item, fieldName)
+
+                if itemValue is None:
+                    # None contains nothing, so this is a match
+                    keepIt = True
+                    break
+
                 didContain = False
                 for maybeContains in value:
                     if maybeContains in itemValue:
