@@ -1,3 +1,6 @@
+* 1.2.1 - Jan 11 2016
+- Support binary-logic operators ( &and, |or, ^xor) on QueryableLists
+
 * 1.2.0 - Jan 11 2016
 - Fixed issue with notcontainsAny
 - Added new compare types that operate on lists stored as strings. All take a tuple, first argument is what to split by, second is what to match against (same type as the non-split equivalent comparison).

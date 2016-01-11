@@ -83,6 +83,10 @@ Operations
 
 * splitnotcontainsAny - Takes a tuple, (splitBy<str>, possibleMatches <list<str>>). Use for a string that represents a list. The field will be split by the first, "splitBy", param, and the result tested that it does not contains any of the items in the provided list.
 
+Additional
+----------
+
+QueryableLists also support the following operators: ( +, -, &, \|, ^ ) to perform the logical addition, subtraction, AND, OR, XOR
 
 
 Full Documentation

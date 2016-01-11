@@ -783,3 +783,31 @@ class QueryableListBase(list):
                 pass
         return myCopy
 
+    def __or__(self, other):
+        ret = self[:]
+        for item in other:
+            if item not in self:
+                ret.append(item)
+
+        return ret
+
+    def __and__(self, other):
+        ret = self.__class__([])
+        for item in self:
+            if item in other:
+                ret.append(item)
+
+        return ret
+
+
+    def __xor__(self, other):
+        ret = self[:]
+        for item in other:
+            if item not in self:
+                ret.append(item)
+            else:
+                ret.remove(item)
+
+        return ret
+        
+
