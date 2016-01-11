@@ -79,9 +79,9 @@ Operations
 
 * splitnotcontains - Takes a tuple, (splitBy<str>, containsThis<str>). Use for a string that represents a list. The field will be split by the first, "splitBy", param, and the result tested that it does not contain an item matching the second, "containsThis", param.
 
-* splitcontainsAny - Takes a tuple, (splitBy<str>, possibleMatches <list<str>>). Use for a string that represents a list. The field will be split by the first, "splitBy", param, and the result tested that it contains any of the tiems in the provided list.
+* splitcontainsAny - Takes a tuple, (splitBy<str>, possibleMatches <list<str>>). Use for a string that represents a list. The field will be split by the first, "splitBy", param, and the result tested that it contains any of the items in the provided list.
 
-* splitnotcontainsAny - Takes a tuple, (splitBy<str>, possibleMatches <list<str>>). Use for a string that represents a list. The field will be split by the first, "splitBy", param, and the result tested that it does not contains any of the tiems in the provided list.
+* splitnotcontainsAny - Takes a tuple, (splitBy<str>, possibleMatches <list<str>>). Use for a string that represents a list. The field will be split by the first, "splitBy", param, and the result tested that it does not contains any of the items in the provided list.
 
 
 
