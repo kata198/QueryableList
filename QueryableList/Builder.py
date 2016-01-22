@@ -60,6 +60,16 @@ class QueryBuilder(object):
                 break
         return lst
 
+    def copy(self):
+        '''
+            copy - Create a copy of this query.
+        
+            @return <QueryBuilder> - a copy of this query
+        '''
+        ret = QueryBuilder()
+        ret.filters = copy.copy(self.filters)
+        return ret
+
     @staticmethod
     def _applyFilter(lst, filterMethod, filterArgs):
         if filterMethod == FILTER_METHOD_AND:
