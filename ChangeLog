@@ -1,8 +1,9 @@
-* 2.0.0 - unreleased
+* 2.0.0 - Jan 25 2016
 - Move constants to constants.py
 - FIX: Missing QueryableListMixed in __all__ (for * import)
 - FEATURE: Add QueryBuilder which allows building queries that can be applied on
 multiple lists
+- Update READMEs and documentation
 
 
 * 1.2.1 - Jan 11 2016

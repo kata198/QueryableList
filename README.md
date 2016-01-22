@@ -4,7 +4,10 @@ What
 ====
 
 QueryableList allows you to "filter" a list of items of varying types, simplifing code by replacing tedious for-loops with simple chaining.
+
 It uses an interface common to some ORMs like Django, Flask, and IndexedRedis.
+
+You can perform single filters on lists of data, or you can build queries and execute that query on any number of arbitrary data sets.
 
 QueryableList also implements the boolean logic operators for lists (AND, OR, XOR) which can simplify your code.
 
@@ -42,8 +45,13 @@ No function, no loop, and list comprehensions can get very messy or impossible w
 
 The above example shows a one-time filtering of a list. You can also build reusable queries, and append different criteria based on conditions or through passing the query around different functions. See "Building Reusable Queries" section below for more info.
 
+
 How?
 ====
+
+
+Types
+-----
 
 Perform one-time filters through one of the list-type extending classes:
 
@@ -55,44 +63,56 @@ Perform one-time filters through one of the list-type extending classes:
 **QueryableListMixed** - QueryableList which can contain dict-like items or object-like item. (This is somewhat slower than using QueryableListObjs or QueryableListDicts directly, but use it if you need to mix, or need to support either type.)
 
 
+The items within these lists do not need to be of the same type. If any fields are missing on the filtered objects, it will be assigned a value of "None" for filtering purposes.
 
 
-You can filter these objects by using the method "filterAnd" (or its alias, "filter"), or "filterOr".
+Filter Methods
+--------------
+
+You can filter the data within these objects through one of the following methods:
 
 *filterAnd* - returns a QueryableList where each item matches ALL of the provided criteria.
+
+*filter* - Alias for filterAnd
 
 *filterOr* - returns a QueryableList where each item matches ANY of the provided criteria.
 
 
-The QueryableList types support all the operations of a list, and return the same QueryableList types so you can perform chaining. QueryableList also supports subtraction, whereas normal lists do not.
+The QueryableList types support all the operations of a list, and return the same QueryableList types so you can perform chaining. 
 
-Items filtered do not need to be of the same type.
-If you filter on a field and it is not present on a member, the value of that field is assumed None (null) for comparison purposes.
+Additionally, you can use ADD(+), SUB(-), AND(&), OR(|), and XOR(^) operators against other QueryableLists as another powerful means of filtering.
 
 
 You specify the filter operations by passing arguments of $fieldName\_\_$operation.
 
-Example: e.x. results = objs.filter(name\_\_ne='Tim') 
+Example: e.x. results = objs.filter(name\_\_ne='Tim')  # get all objects where the 'name' field does not equal 'Tim'
 
-where "$fieldName" matches the name of an attribute/key and "$operation" is one of the following:
+
+For all available operations, see the "Operations" section below.
+
 
 Building Reusable Queries
-=========================
+-------------------------
 
 You can build a reusable query, out of several chains of filters (either AND or OR) by using the **QueryBuilder** class.
 
-The QueryBuilder class stores a "chain" of filters, that are applied in order. Each link in the chain contains a filter type (AND or OR), and the filters themselves (same as the filter methods on the QueryableList).
+The QueryBuilder class stores a "chain" of filters, which are applied in order. Each link in the chain contains a filter type (AND or OR), and the filters themselves (same as the filter methods on the QueryableList).
 
-Use *addFilter(filterType, ..filters..)* to add a link to the chain. This chain can be reused to filter multiple lists.
 
-To execute the query, call *execute(lst)* Where "lst" is your list of items. 
-If you know the type in advance, you can use QueryableListObjs or QueryableListDicts to slightly speed up access times, otherwise a QueryableListMixed (supports both dict and object style access) will be used.
+Use the *addFilter(filterType, ..filters..)* method to add a link to the chain. 
+
+To execute the query, call *execute(lst)* , where "lst" is your list of items. You can execute a query multiple times on any number of datasets.
+
+Use the *copy* method to create a copy of the current set of filters.
+
+
+If you know the type in advance, you can pass a QueryableListObjs or QueryableListDicts when calling *execute* to slightly speed up access times, otherwise a *QueryableListMixed* (supports both dict and object style access) will be used.
 
 Example:
 
 	myQuery = QueryBuilder()
 	myQuery.addFilter(age__gt=21)  # Age must be greater than 22
-	myQuery.addFilter('OR', job__eq='Manager', numSubordinates__gt=0) # Is a manager, or has more than 0 subordinates
+	myQuery.addFilter('OR', job__ieq='Manager', numSubordinates__gt=0) # Is a manager, or has more than 0 subordinates
 
 	managerPartyCompany1 = myQuery.execute(company1Persons) # Filter from all company1Persons those that meet above criteria
 	managerPartyCompany2 = myQuery.execute(company2Persons) # use same filter to apply same query to company2Persons
@@ -144,14 +164,9 @@ Operations
 * splitnotcontainsAny - Takes a tuple, (splitBy<str>, possibleMatches <list<str>>). Use for a string that represents a list. The field will be split by the first, "splitBy", param, and the result tested that it does not contains any of the items in the provided list.
 
 
-Additional
-----------
 
-QueryableLists also support the following operators: ( +, -, &, |, ^ ) to perform the logical addition, subtraction, AND, OR, XOR
-
-
-Full Documentation
-------------------
+Full PyDoc Documentation
+------------------------
 
 Pydoc documentation can be found at: http://htmlpreview.github.io/?https://github.com/kata198/QueryableList/blob/master/doc/QueryableList.html?vers=4
 
