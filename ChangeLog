@@ -1,3 +1,10 @@
+* 2.0.0 - unreleased
+- Move constants to constants.py
+- FIX: Missing QueryableListMixed in __all__ (for * import)
+- FEATURE: Add QueryBuilder which allows building queries that can be applied on
+multiple lists
+
+
 * 1.2.1 - Jan 11 2016
 - Support binary-logic operators ( &and, |or, ^xor) on QueryableLists
 
@@ -19,3 +26,4 @@ New filters are: splitcontains, splitnotcontains, splitcontainsAny, splitnotcont
 
 * 1.0.0 - Jan 6 2016
 - First Release
+
