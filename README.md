@@ -1,17 +1,59 @@
 # QueryableList
-Python module to add support for ORM-style filtering to any list of items. You can use and chain multiple types of filter expressions without several loops in order to greatly simplify the filtering of objects.
+
+What
+====
+
+QueryableList allows you to "filter" a list of items of varying types, simplifing code by replacing tedious for-loops with simple chaining.
+It uses an interface common to some ORMs like Django, Flask, and IndexedRedis.
+
+QueryableList also implements the boolean logic operators for lists (AND, OR, XOR) which can simplify your code.
 
 
-Use through one of the list-type extending classes:
+**What pattern does it replace?**
+
+Constant loops/getters to drill down data. If you are filtering data, displaying data by criteria, etc, your code will be FULL of these.
+
+QueryableList simplifies and makes generic this common pattern of filtering.
+
+*Before*
+
+	def getOlderThan(people, minAge):
+
+		ret = []
+		for person in people: 
+			if person.age and person.age > minAge:
+				ret.append(person)
+		return ret
+
+	...
+	people = getAllPeople() # Get your data  here
+	oldEnoughToRide = getOlderThan(people, 13)
+	notOldEnough =  [person for person in people if person not in oldEnoughToRide]
+
+
+*After*
+
+	people =  QueryableListObjs(  getAllPeople() )  # Transform data into QueryableList
+	oldEnoughToRide =  people.filter(age__gt=13)
+	notOldEnough =  people ^ oldEnoughToRide #  The XOR of the filtered list to the parent is the NOT of the filter criteria
+
+
+No function, no loop, and list comprehensions can get very messy or impossible with a large number of complicated filters applied.
+
+The above example shows a one-time filtering of a list. You can also build reusable queries, and append different criteria based on conditions or through passing the query around different functions. See "Building Reusable Queries" section below for more info.
+
+How?
+====
+
+Perform one-time filters through one of the list-type extending classes:
 
 
 **QueryableListObjs** - This assumes each item extends object [or implements \_\_getattribute\_\_].
 
 **QueryableListDicts** - This assumes that each item is a dict [or implements \_\_getitem\_\_].
 
-**QueryableListMixed** - QueryableList which can contain dict-like items or object-like item.
+**QueryableListMixed** - QueryableList which can contain dict-like items or object-like item. (This is somewhat slower than using QueryableListObjs or QueryableListDicts directly, but use it if you need to mix, or need to support either type.)
 
-  This is somewhat slower than using QueryableListObjs or QueryableListDicts directly, but use it if you need to mix, or need to support either type.
 
 
 
@@ -33,6 +75,24 @@ You specify the filter operations by passing arguments of $fieldName\_\_$operati
 Example: e.x. results = objs.filter(name\_\_ne='Tim') 
 
 where "$fieldName" matches the name of an attribute/key and "$operation" is one of the following:
+
+Building Reusable Queries
+=========================
+
+You can build a reusable query, out of several chains of filters (either AND or OR) by using the **QueryBuilder** class.
+
+The QueryBuilder class stores a "chain" of filters, that are applied in order. Each link in the chain contains a filter type (AND or OR), and the filters themselves (same as the filter methods on the QueryableList). Use *addFilter(filterType, ..filters..)* to add a link to the chain. This chain can be reused to filter multiple lists.
+
+To execute the query, call *execute(lst)* Where "lst" is your list of items. If you know the type in advance, you can use QueryableListObjs or QueryableListDicts to slightly speed up access times, otherwise a QueryableListMixed (supports both dict and object style access) will be used.
+
+Example:
+
+	myQuery = QueryBuilder()
+	myQuery.addFilter(age__gt=21)  # Age must be greater than 22
+	myQuery.addFilter('OR', job__eq='Manager', numSubordinates__gt=0) # Is a manager, or has more than 0 subordinates
+
+	managerPartyCompany1 = myQuery.execute(company1Persons) # Filter from all company1Persons those that meet above criteria
+	managerPartyCompany2 = myQuery.execute(company2Persons) # use same filter to apply same query to company2Persons
 
 
 Operations
@@ -90,69 +150,6 @@ QueryableLists also support the following operators: ( +, -, &, |, ^ ) to perfor
 Full Documentation
 ------------------
 
-Pydoc documentation can be found at: http://htmlpreview.github.io/?https://github.com/kata198/QueryableList/blob/master/doc/QueryableList.html?vers=3
+Pydoc documentation can be found at: http://htmlpreview.github.io/?https://github.com/kata198/QueryableList/blob/master/doc/QueryableList.html?vers=4
 
-
-Example
--------
-
-Here is an example with some simple, silly data, doing some filters, followed by the results.
-
-	from QueryableList import QueryableListDicts, QueryableListObjs
-	import sys
-
-
-	class DataObj(object):
-		pass
-
-	class SampleDataObj(object):
-
-		def __init__(self, colour, age, name, likes):
-			self.colour = colour
-			self.age = age
-			self.name = name
-			self.likes = likes
-
-		def __str__(self):
-			return str(self.__dict__)
-
-		__repr__ = __str__
-
-	if __name__ == '__main__':
-
-		#data = [{'colour': 'purple', 'age': 31, 'name': 'Tim', 'likes' : ['puppies', 'rainbows']}, {'colour': None, 'age': 19, 'name': 'Joe', 'likes' : ['puppies', 'cars']}, {'colour': 'PURPLE', 'age': 23, 'name': 'Joe', 'likes' : ['cheese', 'books']}]
-		data = [
-			SampleDataObj(colour='purple', age=31, name='Tim', likes=['puppies', 'rainbows']),
-			SampleDataObj(colour=None, age=19, name='Joe', likes=['puppies', 'cars']),
-			SampleDataObj(colour='PURPLE', age=23, name='Joe', likes=['cheese', 'books']),
-		]
-
-
-		#data = QueryableListDicts(data)
-		data = QueryableListObjs(data)
-
-		sys.stdout.write("Data: %s\n\n" %(data,))
-
-		sys.stdout.write('People who are over 22 years old:\n%s\n\n' %(data.filter(age__gt=22),))
-
-		#sys.stdout.write('People who like puppies or bricks, and their favourite colour is purple:\n\n' %(data.filter(likes__containsAny=('puppies', 'bricks')).filter(colour__ieq='purple'),))
-		sys.stdout.write('People who like puppies or bricks, and their favourite colour is purple:\n%s\n\n' %(data.filter(likes__containsAny=('puppies', 'bricks'), colour__ieq='purple'),))
-
-		sys.stdout.write('People who are at least 30 years old or like cheese:\n%s\n\n' %(data.filterOr(likes__contains='cheese', age__gte=30),))
-
-
-		#import pdb; pdb.set_trace()
-
-**Results:**
-
-	Data: QueryableListObjs([{'colour': 'purple', 'likes': ['puppies', 'rainbows'], 'age': 31, 'name': 'Tim'}, {'colour': None, 'likes': ['puppies', 'cars'], 'age': 19, 'name': 'Joe'}, {'colour': 'PURPLE', 'likes': ['cheese', 'books'], 'age': 23, 'name': 'Joe'}])
-
-	People who are over 22 years old:
-	QueryableListObjs([{'colour': 'purple', 'likes': ['puppies', 'rainbows'], 'age': 31, 'name': 'Tim'}, {'colour': 'PURPLE', 'likes': ['cheese', 'books'], 'age': 23, 'name': 'Joe'}])
-
-	People who like puppies or bricks, and their favourite colour is purple:
-	QueryableListObjs([{'colour': 'purple', 'likes': ['puppies', 'rainbows'], 'age': 31, 'name': 'Tim'}])
-
-	People who are at least 30 years old or like cheese:
-	QueryableListObjs([{'colour': 'purple', 'likes': ['puppies', 'rainbows'], 'age': 31, 'name': 'Tim'}, {'colour': 'PURPLE', 'likes': ['cheese', 'books'], 'age': 23, 'name': 'Joe'}])
 
