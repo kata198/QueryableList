@@ -81,9 +81,12 @@ Building Reusable Queries
 
 You can build a reusable query, out of several chains of filters (either AND or OR) by using the **QueryBuilder** class.
 
-The QueryBuilder class stores a "chain" of filters, that are applied in order. Each link in the chain contains a filter type (AND or OR), and the filters themselves (same as the filter methods on the QueryableList). Use *addFilter(filterType, ..filters..)* to add a link to the chain. This chain can be reused to filter multiple lists.
+The QueryBuilder class stores a "chain" of filters, that are applied in order. Each link in the chain contains a filter type (AND or OR), and the filters themselves (same as the filter methods on the QueryableList).
 
-To execute the query, call *execute(lst)* Where "lst" is your list of items. If you know the type in advance, you can use QueryableListObjs or QueryableListDicts to slightly speed up access times, otherwise a QueryableListMixed (supports both dict and object style access) will be used.
+Use *addFilter(filterType, ..filters..)* to add a link to the chain. This chain can be reused to filter multiple lists.
+
+To execute the query, call *execute(lst)* Where "lst" is your list of items. 
+If you know the type in advance, you can use QueryableListObjs or QueryableListDicts to slightly speed up access times, otherwise a QueryableListMixed (supports both dict and object style access) will be used.
 
 Example:
 
