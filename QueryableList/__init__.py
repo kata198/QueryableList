@@ -78,17 +78,16 @@
 
 '''
 
-__all__ = ('FILTER_TYPES', 'QueryableListObjs', 'QueryableListDicts', 'QueryableListBase')
+__all__ = ('FILTER_TYPES', 'FILTER_METHOD_OR', 'FILTER_METHOD_OR', 'FILTER_METHODS', 'QueryableListObjs', 'QueryableListDicts', 'QueryableListBase', 'QueryableListMixed', 'QueryBuilder')
 
-__version__ = '1.2.1'
-__version_tuple__ = (1, 2, 1)
+__version__ = '2.0.0'
+__version_tuple__ = (2, 0, 0)
 
-# FILTER_TYPES - All available filter types
-FILTER_TYPES = {'eq', 'ieq', 'ne', 'ine', 'lt', 'gt', 'lte', 'gte', 'isnull', 'is', 'isnot', 
-    'in', 'notin', 'contains', 'notcontains', 'containsAny', 'notcontainsAny',
-    'splitcontains', 'splitnotcontains', 'splitcontainsAny', 'splitnotcontainsAny'}
+
+from .constants import FILTER_TYPES, FILTER_METHODS, FILTER_METHOD_OR, FILTER_METHOD_OR
 
 from .Base import QueryableListBase
+from .Builder import QueryBuilder
 
 
 class QueryableListObjs(QueryableListBase):

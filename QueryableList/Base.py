@@ -1,6 +1,6 @@
 # Copyright (c) 2016 Timothy Savannah under the terms of the GNU Lesser General Public License version 2.1.
 #  You should have received a copy of this as "LICENSE" with this source distribution.
-from . import FILTER_TYPES
+from .constants import FILTER_TYPES
 
 import re
 
