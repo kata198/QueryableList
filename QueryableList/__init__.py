@@ -114,7 +114,7 @@ If you know the type in advance, you can pass a QueryableListObjs or QueryableLi
 Example:
 
 	myQuery = QueryBuilder()
-	myQuery.addFilter(age__gt=21)  # Age must be greater than 22
+	myQuery.addFilter(age__gt=21)  # Age must be greater than 21
 	myQuery.addFilter('OR', job__ieq='Manager', numSubordinates__gt=0) # Is a manager, or has more than 0 subordinates
 
 	managerPartyCompany1 = myQuery.execute(company1Persons) # Filter from all company1Persons those that meet above criteria

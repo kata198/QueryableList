@@ -122,7 +122,7 @@ If&nbsp;you&nbsp;know&nbsp;the&nbsp;type&nbsp;in&nbsp;advance,&nbsp;you&nbsp;can
 Example:<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myQuery&nbsp;=&nbsp;<a href="#QueryBuilder">QueryBuilder</a>()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myQuery.addFilter(age__gt=21)&nbsp;&nbsp;#&nbsp;Age&nbsp;must&nbsp;be&nbsp;greater&nbsp;than&nbsp;22<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myQuery.addFilter(age__gt=21)&nbsp;&nbsp;#&nbsp;Age&nbsp;must&nbsp;be&nbsp;greater&nbsp;than&nbsp;21<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myQuery.addFilter('OR',&nbsp;job__ieq='Manager',&nbsp;numSubordinates__gt=0)&nbsp;#&nbsp;Is&nbsp;a&nbsp;manager,&nbsp;or&nbsp;has&nbsp;more&nbsp;than&nbsp;0&nbsp;subordinates<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;managerPartyCompany1&nbsp;=&nbsp;myQuery.execute(company1Persons)&nbsp;#&nbsp;Filter&nbsp;from&nbsp;all&nbsp;company1Persons&nbsp;those&nbsp;that&nbsp;meet&nbsp;above&nbsp;criteria<br>

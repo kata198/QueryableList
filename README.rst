@@ -125,7 +125,7 @@ Example:
 
 	myQuery = QueryBuilder()
 
-	myQuery.addFilter(age__gt=21)  # Age must be greater than 22
+	myQuery.addFilter(age__gt=21)  # Age must be greater than 21
 
 	myQuery.addFilter('OR', job__ieq='Manager', numSubordinates__gt=0) # Is a manager, or has more than 0 subordinates
 
