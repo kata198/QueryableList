@@ -1,3 +1,11 @@
+* 2.1.0 - Apr 12 2016
+- Add "all" method that returns the list, so that projects which also use
+IndexedRedis can have a type-agnostic interface for filtering (i.e. "all" will
+always return items, and "filter" will always filter. On IndexedRedis,
+"filter" updates/creates and returns a query, and values aren't returned until
+"all" is called, but if you just always expect "all" to return values, you can
+do that whether dealing with an IndexedRedisModel or QueryableList)
+
 * 2.0.0 - Jan 25 2016
 - Move constants to constants.py
 - FIX: Missing QueryableListMixed in __all__ (for * import)

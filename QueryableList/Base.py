@@ -102,6 +102,9 @@ class QueryableListBase(list):
         You cannot use this directly, instead use one of the implementing classes (like QueryableListDicts or QueryableListObjs), or your own implementing class.
     '''
 
+    def all(self):
+        return self
+
 
     @staticmethod
     def _get_item_value(item, fieldName):
