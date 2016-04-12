@@ -177,8 +177,8 @@ Pydoc documentation can be found at: http://htmlpreview.github.io/?https://githu
 
 __all__ = ('FILTER_TYPES', 'FILTER_METHOD_OR', 'FILTER_METHOD_OR', 'FILTER_METHODS', 'QueryableListObjs', 'QueryableListDicts', 'QueryableListBase', 'QueryableListMixed', 'QueryBuilder')
 
-__version__ = '2.0.0'
-__version_tuple__ = (2, 0, 0)
+__version__ = '2.1.0'
+__version_tuple__ = (2, 1, 0)
 
 
 from .constants import FILTER_TYPES, FILTER_METHODS, FILTER_METHOD_OR, FILTER_METHOD_OR
