@@ -7,3 +7,5 @@ include README.rst
 include LICENSE
 include MANIFEST.in
 include setup.py
+include tests/runTests.py
+recursive-include tests/QueryableListTests *.py

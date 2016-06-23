@@ -1,3 +1,6 @@
+* 2.1.1 - ??? ?? ????
+- Add GoodTests.py unit tests
+
 * 2.1.0 - Apr 12 2016
 - Add "all" method that returns the list, so that projects which also use
 IndexedRedis can have a type-agnostic interface for filtering (i.e. "all" will
