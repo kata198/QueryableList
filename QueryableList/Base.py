@@ -1,4 +1,4 @@
-# Copyright (c) 2016 Timothy Savannah under the terms of the GNU Lesser General Public License version 2.1.
+# Copyright (c) 2016, 2017 Timothy Savannah under the terms of the GNU Lesser General Public License version 2.1.
 #  You should have received a copy of this as "LICENSE" with this source distribution. The full license is available at https://raw.githubusercontent.com/kata198/QueryableList/master/LICENSE
 from .constants import FILTER_TYPES
 
@@ -34,7 +34,9 @@ def getFiltersFromArgs(kwargs):
         'in'       : [],
         'notin'    : [],
         'contains' : [],
+        'icontains': [],
         'notcontains' : [],
+        'noticontains' : [],
         'containsAny' : [],
         'notcontainsAny' : [],
         'splitcontains' : [],
@@ -79,13 +81,13 @@ def getFiltersFromArgs(kwargs):
                 except:
                     pass
             # Optimization - if case-insensitive, lowercase the comparison value here
-            elif filterType in ('ieq', 'ine'):
+            elif filterType in ('ieq', 'ine', 'icontains', 'noticontains'):
                 value = value.lower()
             elif filterType.startswith('split'):
                 if (not issubclass(type(value), tuple) and not issubclass(type(value), list)) or len(value) != 2:
                     raise ValueError('Filter type %s expects a tuple of two params. (splitBy, matchPortion)' %(filterType,))
-                
-                
+
+
 
         ret[filterType].append( (field, value) )
 
@@ -242,7 +244,7 @@ class QueryableListBase(list):
             if keepIt is False:
                 continue
 
-                
+
             for fieldName, value in filters['gte']:
                 if self._get_item_value(item, fieldName) < value:
                     keepIt = False
@@ -261,7 +263,22 @@ class QueryableListBase(list):
                     # If field does not support "in", it does not contain the item.
                     keepIt = False
                     break
-                    
+
+            if keepIt is False:
+                continue
+
+            for fieldName, value in filters['icontains']:
+                itemValue = self._get_item_value(item, fieldName)
+                try:
+                    itemValue = itemValue.lower()
+
+                    if value not in itemValue:
+                        keepIt = False
+                        break
+                except:
+                    keepIt = False
+                    break
+
             if keepIt is False:
                 continue
 
@@ -274,7 +291,22 @@ class QueryableListBase(list):
                 except:
                     # If field does not support "in", it does not contain the item.
                     continue
-                    
+
+            if keepIt is False:
+                continue
+
+            for fieldName, value in filters['noticontains']:
+                itemValue = self._get_item_value(item, fieldName)
+                try:
+                    itemValue = itemValue.lower()
+
+                    if value in itemValue:
+                        keepIt = False
+                        break
+                except:
+                    continue
+
+
             if keepIt is False:
                 continue
 
@@ -380,7 +412,7 @@ class QueryableListBase(list):
                     # Cannot split, does not match.
                     keepIt = False
                     break
-                    
+
 
                 didContain = False
                 for maybeContains in maybeContainsLst:
@@ -426,9 +458,9 @@ class QueryableListBase(list):
 
         return ret
 
-                
+
     filter = filterAnd
-    
+
     def filterOr(self, **kwargs):
         '''
             filterOr - Performs a filter and returns a QueryableList object of the same type.
@@ -561,7 +593,7 @@ class QueryableListBase(list):
                 ret.append(item)
                 continue
 
-                
+
             for fieldName, value in filters['gte']:
                 if self._get_item_value(item, fieldName) >= value:
                     keepIt = True
@@ -580,7 +612,22 @@ class QueryableListBase(list):
                 except:
                     # If field does not support "in", it does not contain the item.
                     continue
-                    
+
+            if keepIt is True:
+                ret.append(item)
+                continue
+
+            for fieldName, value in filters['icontains']:
+                itemValue = self._get_item_value(item, fieldName)
+                try:
+                    itemValue = itemValue.lower()
+
+                    if value in itemValue:
+                        keepIt = True
+                        break
+                except:
+                    continue
+
             if keepIt is True:
                 ret.append(item)
                 continue
@@ -595,10 +642,28 @@ class QueryableListBase(list):
                     # If field does not support "in", it does not contain the item.
                     keepIt = True
                     break
-                    
+
             if keepIt is True:
                 ret.append(item)
                 continue
+
+            for fieldName, value in filters['noticontains']:
+                itemValue = self._get_item_value(item, fieldName)
+                try:
+                    itemValue = itemValue.lower()
+
+                    if value not in itemValue:
+                        keepIt = True
+                        break
+                except:
+                    # If field does not support "in", it does not contain the item.
+                    keepIt = True
+                    break
+
+            if keepIt is True:
+                ret.append(item)
+                continue
+
 
             for fieldName, value in filters['containsAny']:
                 itemValue = self._get_item_value(item, fieldName)
@@ -706,8 +771,8 @@ class QueryableListBase(list):
                 except:
                     # Cannot split, does not match.
                     continue
-                 
-   
+
+
                 didContain = False
                 for maybeContains in maybeContainsLst:
                     if maybeContains in itemValue:
@@ -812,5 +877,5 @@ class QueryableListBase(list):
                 ret.remove(item)
 
         return ret
-        
+
 
