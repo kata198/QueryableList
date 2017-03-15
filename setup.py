@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2016 Timothy Savannah under terms of LGPLv2. You should have received a copy of this with this distribution as "LICENSE"
+# Copyright (c) 2016, 2017 Timothy Savannah under terms of LGPLv2.
+#  You should have received a copy of this with this distribution as "LICENSE"
 
 
 #vim: set ts=4 sw=4 expandtab
@@ -26,7 +27,7 @@ if __name__ == '__main__':
         long_description = summary
 
     setup(name='QueryableList',
-            version='2.2.0',
+            version='2.2.1',
             packages=['QueryableList'],
             author='Tim Savannah',
             author_email='kata198@gmail.com',
