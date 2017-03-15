@@ -1,3 +1,6 @@
+* 2.2.1 - Mar 14 2017
+- Fix missing "icontains" and "contains" in the docstring (for pydoc)
+
 * 2.2.0 - Mar 14 2017
 - Add icontains and noticontains operations to do a case-insensitive
 "contains" and "not contains" filtering
