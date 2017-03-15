@@ -26,7 +26,7 @@ if __name__ == '__main__':
         long_description = summary
 
     setup(name='QueryableList',
-            version='2.1.0',
+            version='2.2.0',
             packages=['QueryableList'],
             author='Tim Savannah',
             author_email='kata198@gmail.com',
@@ -36,7 +36,7 @@ if __name__ == '__main__':
             description=summary,
             long_description=long_description,
             license='LGPLv2',
-            keywords=['queryablelist', 'query', 'list', 'filter', 'objects', 'eq', 'ne', 'lt', 'gt', 'equals', 'not', 'compare', 'comprehension', 'orm', 'queryable', 'django', 'flask', 'indexedredis'],
+            keywords=['queryablelist', 'query', 'list', 'filter', 'objects', 'eq', 'ne', 'lt', 'gt', 'equals', 'not', 'compare', 'comprehension', 'orm', 'queryable', 'django', 'flask', 'indexedredis', 'contains', 'icontains'],
             classifiers=['Development Status :: 5 - Production/Stable',
                          'Programming Language :: Python',
                          'License :: OSI Approved :: GNU Lesser General Public License v2 (LGPLv2)',
@@ -46,6 +46,8 @@ if __name__ == '__main__':
                           'Programming Language :: Python :: 3',
                           'Programming Language :: Python :: 3.3',
                           'Programming Language :: Python :: 3.4',
+                          'Programming Language :: Python :: 3.5',
+                          'Programming Language :: Python :: 3.6',
                           'Topic :: Software Development :: Libraries :: Python Modules',
             ]
     )
