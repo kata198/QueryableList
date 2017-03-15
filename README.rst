@@ -181,7 +181,13 @@ Operations
 * contains - Test that the item's field value contains the provided value ( using "in" )
 
 
+* icontains - Case-insensitive "contains"
+
+
 * notcontains - Test that the item's field value does not contain the provided value ( using "not in" )
+
+
+* icontains - Case-insensitive "notcontains"
 
 
 * containsAny - Test that the item's field value contains any of the items in the provided list ( using "in" )
