@@ -45,3 +45,6 @@ class hashableDict(dict):
         ret = hash(hashableStr)
         return ret
 
+
+def assembleItems(item, nums):
+    return [item[num] for num in nums]
