@@ -12,3 +12,36 @@ class DataObject(object):
         return 'DataObject( %s )' %(', '.join(['%s=%s' %(key, repr(value)) for key, value in self.__dict__.items()]))
 
     __repr__ = __str__
+
+
+class hashableDict(dict):
+    '''
+        A dict that is hashable.
+    '''
+
+    def __hash__(self):
+        KEYVAL_SEP = '~~..~~'
+        NONEVAL='~~__NONE$$zz'
+
+        PAIRS_SEP='88ascvjikZZ'
+
+        hashableStr = []
+
+        keys = list(self.keys())
+        keys.sort()
+
+        for key in keys:
+            value = self[key]
+
+            if value is None:
+                value = NONEVAL
+            else:
+                value = str(value)
+
+            hashableStr.append(key + KEYVAL_SEP + value)
+
+        hashableStr = PAIRS_SEP.join(hashableStr)
+
+        ret = hash(hashableStr)
+        return ret
+
