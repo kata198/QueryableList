@@ -877,14 +877,33 @@ class QueryableListBase(list):
               Returns a copy, does not modify inline
         '''
         myCopy = self[:]
+
         for item in other:
-            try:
-                myCopy.remove(item)
-            except:
-                pass
+            while True:
+                # Remove ALL copies
+                try:
+                    myCopy.remove(item)
+                except ValueError:
+                    break
         return myCopy
 
-    # TODO: Implement __isub__
+    def __isub__(self, other):
+        '''
+            __isub__ - Implement subtract-equals. Removes any items from #self that are present in #other
+
+            Works inline and modifies #self
+        '''
+        for item in other:
+            while True:
+                # Remove ALL copies of OTHER
+                try:
+                    self.remove(item)
+                except ValueError:
+                    break
+
+        return self
+
+
 
     def __or__(self, other):
         '''
