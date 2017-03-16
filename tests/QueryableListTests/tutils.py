@@ -1,4 +1,8 @@
+'''
+    tutils - Common test functions used by multiple tests
+'''
 
+# vim: set ts=4 st=4 sw=4 expandtab :
 def filterDictToStr(filterDict):
     return ', '.join(['%s=%s' %(key, repr(value)) for key, value in filterDict.items()])
 

@@ -2,6 +2,8 @@
 #  You should have received a copy of this as "LICENSE" with this source distribution.
 #
 # The full license is available at https://raw.githubusercontent.com/kata198/QueryableList/master/LICENSE
+
+#vim: set ts=4 st=4 sw=4 expandtab
 '''
     QueryableList - Allows adding ORM-style filter capabilities to ANY collection of data.
 
@@ -101,3 +103,5 @@ class QueryableListMixed(QueryableListBase):
             return QueryableListDicts._get_item_value(item, fieldName)
 
         return QueryableListObjs._get_item_value(item, fieldName)
+
+#vim: set ts=4 st=4 sw=4 expandtab

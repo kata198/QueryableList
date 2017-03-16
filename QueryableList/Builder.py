@@ -9,7 +9,7 @@
 
 '''
 
-#vim: set ts=4 sw=4 expandtab
+#vim: set ts=4 st=4 sw=4 expandtab
 
 import copy
 from collections import namedtuple, deque
@@ -114,3 +114,4 @@ class QueryBuilder(object):
             return lst.filterOr(**filterArgs)
 
 
+#vim: set ts=4 st=4 sw=4 expandtab

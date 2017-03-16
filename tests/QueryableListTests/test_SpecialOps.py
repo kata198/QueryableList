@@ -1,4 +1,6 @@
 #!/usr/bin/env GoodTests.py
+
+# vim: set ts=4 st=4 sw=4 expandtab :
 ''' 
     Tests some basic ops (like +, -, +=)
 
@@ -255,3 +257,5 @@ class TestSpecialOps(object):
 if __name__ == '__main__':
     sys.exit(subprocess.Popen('GoodTests.py "%s"' %(sys.argv[0],), shell=True).wait())
 
+
+# vim: set ts=4 st=4 sw=4 expandtab :

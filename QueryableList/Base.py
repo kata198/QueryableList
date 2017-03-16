@@ -1,5 +1,7 @@
 # Copyright (c) 2016, 2017 Timothy Savannah under the terms of the GNU Lesser General Public License version 2.1.
 #  You should have received a copy of this as "LICENSE" with this source distribution. The full license is available at https://raw.githubusercontent.com/kata198/QueryableList/master/LICENSE
+
+#vim: set ts=4 st=4 sw=4 expandtab
 from .constants import FILTER_TYPES
 
 import re
@@ -996,3 +998,6 @@ class QueryableListBase(list):
         return ret
 
     # TODO: Implement __ixor__
+
+
+#vim: set ts=4 st=4 sw=4 expandtab

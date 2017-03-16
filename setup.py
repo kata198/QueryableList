@@ -4,7 +4,7 @@
 #  You should have received a copy of this with this distribution as "LICENSE"
 
 
-#vim: set ts=4 sw=4 expandtab
+#vim: set ts=4 st=4 sw=4 expandtab
 
 import os
 from setuptools import setup
@@ -55,3 +55,4 @@ if __name__ == '__main__':
 
 
 
+#vim: set ts=4 st=4 sw=4 expandtab
