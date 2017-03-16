@@ -19,42 +19,22 @@ def getFiltersFromArgs(kwargs):
         @return - Dictionary of each filter type (minus the ones that are optimized into others), each containing a list of tuples, (fieldName, matchingValue)
     '''
 
-    # Hard copy of FILTER_TYPES here for optimization/reworking. 
-    ret = {
-        'eq'       : [],
-        'ieq'      : [],
-        'ne'       : [],
-        'ine'      : [],
-        'lt'       : [],
-        'gt'       : [],
-        'lte'      : [],
-        'gte'      : [],
-        'is'       : [],
-        'isnot'    : [],
-        'in'       : [],
-        'notin'    : [],
-        'contains' : [],
-        'icontains': [],
-        'notcontains' : [],
-        'noticontains' : [],
-        'containsAny' : [],
-        'notcontainsAny' : [],
-        'splitcontains' : [],
-        'splitnotcontains' : [],
-        'splitcontainsAny' : [],
-        'splitnotcontainsAny' : [],
-    }
+    # Create a copy of each possible filter in FILTER_TYPES and link to empty list.
+    #  This object will be filled with all of the filters requested
+    ret = { filterType : list() for filterType in FILTER_TYPES }
 
     for key, value in kwargs.items():
         matchObj = FILTER_PARAM_RE.match(key)
         if not matchObj:
 
-            # Default is eq
+            # Default ( no __$oper) is eq
             filterType = 'eq'
             field = key
 
         else:
 
+            # We have an operation defined, extract it, and optimize if possible
+            #  (like if op is a case-insensitive, lowercase the value here)
             groupDict = matchObj.groupdict()
 
             filterType = groupDict['filterType']
@@ -66,13 +46,15 @@ def getFiltersFromArgs(kwargs):
 
 
             if filterType == 'isnull':
-                # Convert "isnull" to one of the "is" or "isnot" filters
+                # Convert "isnull" to one of the "is" or "isnot" filters against None
                 if type(value) is not bool:
                     raise ValueError('Filter type "isnull" requires True/False.')
+
                 if value is True:
                     filterType = "is"
                 else:
                     filterType = "isnot"
+
                 value = None
             elif filterType in ('in', 'notin'):
                 # Try to make more efficient by making a set. Fallback to just using what they provide, could be an object implementing "in"
@@ -105,6 +87,17 @@ class QueryableListBase(list):
     '''
 
     def all(self):
+        '''
+            all - Returns all items in this collection, as the collection type (aka returns "self").
+
+              This method is provided for method parity with ORMs that build a filter set with filter calls,
+                and then execute with ".all" (like django or IndexedRedis).
+
+              That way you can filter and call ".all()" after, and it doesn't matter if you're hitting the db
+                or filtering already-fetched objects, the usage remains the same.
+
+            @return <self.__class__> - self
+        '''
         return self
 
 
@@ -135,6 +128,9 @@ class QueryableListBase(list):
         filters = getFiltersFromArgs(kwargs)
         ret = self.__class__()
 
+        # AND loop - for each item in this collection, run through each of the filter types.
+        # If any of the filter types do not match, move on to next item
+        # If all filters match, add item to the return set
         for item in self:
             keepIt = True
 
@@ -459,6 +455,11 @@ class QueryableListBase(list):
         return ret
 
 
+    '''
+        filter - Synonym to '#filterAnd'
+
+        @see #QueryableListBase.filterAnd
+    '''
     filter = filterAnd
 
     def filterOr(self, **kwargs):
@@ -474,6 +475,9 @@ class QueryableListBase(list):
         filters = getFiltersFromArgs(kwargs)
         ret = self.__class__()
 
+        # OR filtering - For each item in the collection
+        #   Run through each filter type. If anything matches, we add the item to the collection and continue
+        #   If we get to the end without a match, we continue to next item
         for item in self:
             keepIt = False
 
@@ -827,15 +831,37 @@ class QueryableListBase(list):
     ################################################
 
     def __add__(self, other):
+        '''
+            __add__ - Append all items in #other to the tail of #self
+
+                + operator
+
+              Returns a copy, does not modify this item.
+        '''
         return self.__class__(list.__add__(self, other))
 
     def __iadd__(self, other):
+        '''
+            __iadd__ - Append all items in #other to the tail of #self
+
+              += operator
+
+             TODO: This is creating a copy, maybe we could do it better...
+        '''
         return self.__class__(list.__iadd__(self, other))
 
     def __getslice__(self, start, end):
+        '''
+            __getslice__ - Return a "slice" (subset) of the current collection.
+
+            Returns a copy
+        '''
         return self.__class__(list.__getslice__(self, start, end))
 
     def __repr__(self):
+        '''
+            __repr__ - Return a code representation of this class
+        '''
         return "%s(%s)" %(self.__class__.__name__, list.__repr__(self))
 
     ################################################
@@ -843,6 +869,11 @@ class QueryableListBase(list):
     ################################################
 
     def __sub__(self, other):
+        '''
+            __sub__ - Implement subtract. Removes any items from #self that are present in #other
+
+              Returns a copy, does not modify inline
+        '''
         myCopy = self[:]
         for item in other:
             try:
@@ -851,7 +882,14 @@ class QueryableListBase(list):
                 pass
         return myCopy
 
+    # TODO: Implement __isub__
+
     def __or__(self, other):
+        '''
+            __or__ - Append any items found in #other which are not already present in #self
+
+                Returns a copy
+        '''
         ret = self[:]
         for item in other:
             if item not in self:
@@ -859,7 +897,14 @@ class QueryableListBase(list):
 
         return ret
 
+    # TODO: Implement __ior__
+
     def __and__(self, other):
+        '''
+            __and__ - Return a QueryableList (of this type) which contains all the elements in #self that are also in #other
+
+              Returns a copy
+        '''
         ret = self.__class__([])
         for item in self:
             if item in other:
@@ -867,8 +912,15 @@ class QueryableListBase(list):
 
         return ret
 
+    # TODO: Implement __iand__
 
     def __xor__(self, other):
+        '''
+            __xor__ - Return a QueryableList (of this type) which contains all the elements
+              that appear in either #self or #other, but not both.
+
+              Returns a copy
+        '''
         ret = self[:]
         for item in other:
             if item not in self:
@@ -878,4 +930,4 @@ class QueryableListBase(list):
 
         return ret
 
-
+    # TODO: Implement __ixor__
