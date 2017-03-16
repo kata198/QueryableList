@@ -118,6 +118,63 @@ Example:
 	managerPartyCompany2 = myQuery.execute(company2Persons) # use same filter to apply same query to company2Persons
 
 
+Extending QueryableList for your own data sets
+----------------------------------------------
+
+One of the powerful aspects of QueryableList is that it is easily extendable.
+
+If your objects are not simple dicts or objects, you can extend QueryableList.QueryableListBase 
+to almost instantly gain all the filtering functinoality with your complex collection.
+
+You only need to implement a single method, 
+
+	@staticmethod
+	def _get_item_value(item, fieldName)
+
+
+"item" will be an item in your collection, and "fieldName" is the field being queried. 
+
+For example, say you have a series of objects, "Job", which contain some attributes and a "queue".
+
+You want to be able to filter on both the attributes on the object and various special attributes of it's queue (like size, item ids, etc).
+
+You can implement like this:
+
+	class MyJobCollection(QueryableList.QueryableListBase):
+
+		@staticmethod
+		def _get_item_value(item, fieldName):
+
+			if fieldName == 'queueSize':
+				# queueSize is the number of items in the queue
+				return len(item.queue)
+			elif fieldName == 'queueItemIds':
+				# queueItemIds is a list of the ids in the item queue,
+				#  so a "contains" query can check if an id is in this item's queue
+				return [qi.id for qi in item.queue]
+			elif hasattr(item, fieldName):
+				# Otherwise, if this is an attribute on the item, return it's value
+				if fieldName == 'queue':
+					raise KeyError('Cannot query queue directly. Try queueSize or queueItemIds.')
+				return getattr(item, fieldName)
+			else:
+				raise KeyError('Invalid attribute "%s" on %s' %(fieldName, item.__class__.__name__))
+
+The init method takes a list of items (and it contains all the methods a list has, like *.append*), so you can create it like:
+
+	myJob1 = MyQueue(...)
+	myJob2 = MyQueue(...)
+
+	myJobs = MyQueueCollection([myJob1, myJob2])
+
+and use it like:
+
+	largeJobs = myJobs.filter(queueSize__gt=10)
+
+So just by implementing that one method, you now have all the powerful filter capabilities that QueryableList provides!
+
+
+
 Operations
 ----------
 
