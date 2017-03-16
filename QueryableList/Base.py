@@ -8,6 +8,14 @@ __all__ = ('FILTER_PARAM_RE', 'getFiltersFromArgs', 'QueryableListBase')
 
 FILTER_PARAM_RE = re.compile('^(?P<field>.+)__(?P<filterType>.+)$')
 
+'''
+    USE_CACHED - Set to True to cache field values on the items.
+
+      I don't notice any performance difference with this on or off,
+        so best to leave it False for now.
+'''
+USE_CACHED = False
+
 
 def getFiltersFromArgs(kwargs):
     '''
@@ -115,6 +123,30 @@ class QueryableListBase(list):
         raise NotImplementedError('QueryableList type must implement _get_item_value')
 
 
+    def _getItemValueFunction(self, caches, _get_item_value):
+
+        _i = ctypes.c_int()
+
+        maxI = len(caches)
+
+        def _getItemValue_impl(item, fieldName):
+            i = _i.value
+            cache = caches[i]
+            _i.value += 1
+            if i >= maxI:
+                _i.value = 0
+            else:
+                _i.value = i
+
+            if fieldName in cache:
+                val = cache[fieldName]
+            else:
+                val = _get_item_value(item, fieldName)
+                cache[fieldName] = val
+            return val
+
+        return _getItemValue_impl
+
     def filterAnd(self, **kwargs):
         '''
             filter/filterAnd - Performs a filter and returns a QueryableList object of the same type.
@@ -128,6 +160,12 @@ class QueryableListBase(list):
         filters = getFiltersFromArgs(kwargs)
         ret = self.__class__()
 
+        if USE_CACHED:
+            caches = [dict() for i in range(len(self))]
+            get_item_value = self._getItemValueFunction(caches, self._get_item_value)
+        else:
+            get_item_value = get_item_value
+
         # AND loop - for each item in this collection, run through each of the filter types.
         # If any of the filter types do not match, move on to next item
         # If all filters match, add item to the return set
@@ -136,7 +174,7 @@ class QueryableListBase(list):
 
             # Do is/isnot first (and implicitly, isnull)
             for fieldName, value in filters['is']:
-                if self._get_item_value(item, fieldName) is not value:
+                if get_item_value(item, fieldName) is not value:
                     keepIt = False
                     break
 
@@ -144,7 +182,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['isnot']:
-                if self._get_item_value(item, fieldName) is value:
+                if get_item_value(item, fieldName) is value:
                     keepIt = False
                     break
 
@@ -152,7 +190,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['in']:
-                if self._get_item_value(item, fieldName) not in value:
+                if get_item_value(item, fieldName) not in value:
                     keepIt = False
                     break
 
@@ -160,7 +198,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['notin']:
-                if self._get_item_value(item, fieldName) in value:
+                if get_item_value(item, fieldName) in value:
                     keepIt = False
                     break
 
@@ -169,7 +207,7 @@ class QueryableListBase(list):
 
 
             for fieldName, value in filters['eq']:
-                if self._get_item_value(item, fieldName) != value:
+                if get_item_value(item, fieldName) != value:
                     keepIt = False
                     break
 
@@ -179,7 +217,7 @@ class QueryableListBase(list):
             for fieldName, value in filters['ieq']:
                 # If we can't lowercase the item's value, it obviously doesn't match whatever we previously could.
                 # Reminder: the "i" filter's values have already been lowercased
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
                 try:
                     itemValueLower = itemValue.lower()
                 except:
@@ -194,7 +232,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['ne']:
-                if self._get_item_value(item, fieldName) == value:
+                if get_item_value(item, fieldName) == value:
                     keepIt = False
                     break
 
@@ -202,7 +240,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['ine']:
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
                 try:
                     itemValueLower = itemValue.lower()
                 except:
@@ -217,7 +255,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['lt']:
-                if self._get_item_value(item, fieldName) >= value:
+                if get_item_value(item, fieldName) >= value:
                     keepIt = False
                     break
 
@@ -225,7 +263,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['lte']:
-                if self._get_item_value(item, fieldName) > value:
+                if get_item_value(item, fieldName) > value:
                     keepIt = False
                     break
 
@@ -233,7 +271,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['gt']:
-                if self._get_item_value(item, fieldName) <= value:
+                if get_item_value(item, fieldName) <= value:
                     keepIt = False
                     break
 
@@ -242,7 +280,7 @@ class QueryableListBase(list):
 
 
             for fieldName, value in filters['gte']:
-                if self._get_item_value(item, fieldName) < value:
+                if get_item_value(item, fieldName) < value:
                     keepIt = False
                     break
 
@@ -250,7 +288,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['contains']:
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
                 try:
                     if value not in itemValue:
                         keepIt = False
@@ -264,7 +302,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['icontains']:
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
                 try:
                     itemValue = itemValue.lower()
 
@@ -279,7 +317,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['notcontains']:
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
                 try:
                     if value in itemValue:
                         keepIt = False
@@ -292,7 +330,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['noticontains']:
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
                 try:
                     itemValue = itemValue.lower()
 
@@ -307,7 +345,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['containsAny']:
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
 
                 if itemValue is None:
                     # Cannot split None
@@ -327,7 +365,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['notcontainsAny']:
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
 
                 if itemValue is None:
                     # Cannot split None, so it is a match..
@@ -351,7 +389,7 @@ class QueryableListBase(list):
             for fieldName, value in filters['splitcontains']:
                 (splitBy, maybeContains) = value
 
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
 
                 if itemValue is None:
                     # Cannot split, no match
@@ -374,7 +412,7 @@ class QueryableListBase(list):
             for fieldName, value in filters['splitnotcontains']:
                 (splitBy, maybeContains) = value
 
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
 
                 if itemValue is None:
                     # Cannot split, so does not contain and is a match.
@@ -395,7 +433,7 @@ class QueryableListBase(list):
             for fieldName, value in filters['splitcontainsAny']:
                 (splitBy, maybeContainsLst) = value
 
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
 
                 if itemValue is None:
                     # Cannot split, so it does not contain a match
@@ -425,7 +463,7 @@ class QueryableListBase(list):
             for fieldName, value in filters['splitnotcontainsAny']:
                 (splitBy, maybeContainsLst) = value
 
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
 
                 if itemValue is None:
                     # Cannot split, so it must not contain any (and is a match)
@@ -475,6 +513,12 @@ class QueryableListBase(list):
         filters = getFiltersFromArgs(kwargs)
         ret = self.__class__()
 
+        if USE_CACHED:
+            caches = [dict() for i in range(len(self))]
+            get_item_value = self._getItemValueFunction(caches, self._get_item_value)
+        else:
+            get_item_value = get_item_value
+
         # OR filtering - For each item in the collection
         #   Run through each filter type. If anything matches, we add the item to the collection and continue
         #   If we get to the end without a match, we continue to next item
@@ -483,7 +527,7 @@ class QueryableListBase(list):
 
             # Do is/isnot (and implicitly isnull) first.
             for fieldName, value in filters['is']:
-                if self._get_item_value(item, fieldName) is value:
+                if get_item_value(item, fieldName) is value:
                     keepIt = True
                     break
 
@@ -492,7 +536,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['isnot']:
-                if self._get_item_value(item, fieldName) is not value:
+                if get_item_value(item, fieldName) is not value:
                     keepIt = True
                     break
 
@@ -501,7 +545,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['in']:
-                if self._get_item_value(item, fieldName) in value:
+                if get_item_value(item, fieldName) in value:
                     keepIt = True
                     break
 
@@ -510,7 +554,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['notin']:
-                if self._get_item_value(item, fieldName) not in value:
+                if get_item_value(item, fieldName) not in value:
                     keepIt = True
                     break
 
@@ -519,7 +563,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['eq']:
-                if self._get_item_value(item, fieldName) == value:
+                if get_item_value(item, fieldName) == value:
                     keepIt = True
                     break
 
@@ -530,7 +574,7 @@ class QueryableListBase(list):
             for fieldName, value in filters['ieq']:
                 # If we can't lowercase the item's value, it obviously doesn't match whatever we previously could.
                 # Reminder: the "i" filter's values have already been lowercased
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
                 try:
                     itemValueLower = itemValue.lower()
                 except:
@@ -546,7 +590,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['ne']:
-                if self._get_item_value(item, fieldName) != value:
+                if get_item_value(item, fieldName) != value:
                     keepIt = True
                     break
 
@@ -555,7 +599,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['ine']:
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
                 try:
                     itemValueLower = itemValue.lower()
                 except:
@@ -571,7 +615,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['lt']:
-                if self._get_item_value(item, fieldName) < value:
+                if get_item_value(item, fieldName) < value:
                     keepIt = True
                     break
 
@@ -580,7 +624,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['lte']:
-                if self._get_item_value(item, fieldName) <= value:
+                if get_item_value(item, fieldName) <= value:
                     keepIt = True
                     break
 
@@ -589,7 +633,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['gt']:
-                if self._get_item_value(item, fieldName) > value:
+                if get_item_value(item, fieldName) > value:
                     keepIt = True
                     break
 
@@ -599,7 +643,7 @@ class QueryableListBase(list):
 
 
             for fieldName, value in filters['gte']:
-                if self._get_item_value(item, fieldName) >= value:
+                if get_item_value(item, fieldName) >= value:
                     keepIt = True
                     break
 
@@ -608,7 +652,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['contains']:
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
                 try:
                     if value in itemValue:
                         keepIt = True
@@ -622,7 +666,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['icontains']:
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
                 try:
                     itemValue = itemValue.lower()
 
@@ -637,7 +681,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['notcontains']:
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
                 try:
                     if value not in itemValue:
                         keepIt = True
@@ -652,7 +696,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['noticontains']:
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
                 try:
                     itemValue = itemValue.lower()
 
@@ -670,7 +714,7 @@ class QueryableListBase(list):
 
 
             for fieldName, value in filters['containsAny']:
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
 
                 if itemValue is None:
                     # None contains nothing, no match
@@ -690,7 +734,7 @@ class QueryableListBase(list):
                 continue
 
             for fieldName, value in filters['notcontainsAny']:
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
 
                 if itemValue is None:
                     # None contains nothing, so this is a match
@@ -714,7 +758,7 @@ class QueryableListBase(list):
             for fieldName, value in filters['splitcontains']:
                 (splitBy, maybeContains) = value
 
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
 
                 if itemValue is None:
                     # Cannot split, no match
@@ -737,7 +781,7 @@ class QueryableListBase(list):
             for fieldName, value in filters['splitnotcontains']:
                 (splitBy, maybeContains) = value
 
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
 
                 if itemValue is None:
                     # Cannot split, so does not contain and is a match.
@@ -764,7 +808,7 @@ class QueryableListBase(list):
             for fieldName, value in filters['splitcontainsAny']:
                 (splitBy, maybeContainsLst) = value
 
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
 
                 if itemValue is None:
                     # Cannot split, so it does not contain a match
@@ -795,7 +839,7 @@ class QueryableListBase(list):
             for fieldName, value in filters['splitnotcontainsAny']:
                 (splitBy, maybeContainsLst) = value
 
-                itemValue = self._get_item_value(item, fieldName)
+                itemValue = get_item_value(item, fieldName)
 
                 if itemValue is None:
                     # Cannot split, so it must not contain any (and is a match)
