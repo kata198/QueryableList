@@ -11,17 +11,7 @@ import subprocess
 
 from QueryableList import QueryableListObjs, QueryableListDicts, QueryableListMixed
 
-
-class DataObject(object):
-
-    def __init__(self, **kwargs):
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-
-    def __str__(self):
-        return 'DataObject( %s )' %(', '.join(['%s=%s' %(key, repr(value)) for key, value in self.__dict__.items()]))
-
-    __repr__ = __str__
+from tutils import filterDictToStr, DataObject
 
 
 class TestOperations(object):
@@ -65,7 +55,7 @@ class TestOperations(object):
         try:
             assert not missingItems
         except AssertionError as e:
-            raise AssertionError('Missing expected item%s in %s query { %s }: %s' %(len(missingItems) > 1 and 's' or '', filterType, TestBasicFiltering._filterDictToStr(filterDict), str(list(missingItems))) )
+            raise AssertionError('Missing expected item%s in %s query { %s }: %s' %(len(missingItems) > 1 and 's' or '', filterType, filterDictToStr(filterDict), str(list(missingItems))) )
 
 
         extraItems = resultsSet - expectedObjsSet
@@ -73,13 +63,13 @@ class TestOperations(object):
         try:
             assert not extraItems
         except AssertionError as e:
-            raise AssertionError('Got unexpected item%s in %s query { %s }: %s' %(len(extraItems) > 1 and 's' or '', filterType, TestBasicFiltering._filterDictToStr(filterDict), str(list(extraItems))) )
+            raise AssertionError('Got unexpected item%s in %s query { %s }: %s' %(len(extraItems) > 1 and 's' or '', filterType, filterDictToStr(filterDict), str(list(extraItems))) )
 
         # Should never be true... but I wanted the verbose results above so I moved this test down
         try:
             assert len(results) == len(expectedObjs)
         except AssertionError as e:
-            raise AssertionError('Expected %s query { %s } to return %d objects. Got: %d' %(filterType, TestBasicFiltering._filterDictToStr(filterDict), len(expectedObjs), len(results)) )
+            raise AssertionError('Expected %s query { %s } to return %d objects. Got: %d' %(filterType, filterDictToStr(filterDict), len(expectedObjs), len(results)) )
         
         return True # cuz... why not?
 
