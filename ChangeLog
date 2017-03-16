@@ -1,3 +1,34 @@
+* 3.0.0 - ??? ?? ????
+- Add some tests that seem to have been accidently not committed which tast
+basic operation
+- Add test for Operations. Implement a few of them, eventually will want to
+have all operations here (eq, ne, contains, etc)
+- Add test fo operators, ( like +, -, +=, etc. )
+- Fix __iadd__ ( += )to not make a copy, but to just inline update the list.
+Previously it was updating the list inline, so references and such
+functionally the same, but it made a copy after the inline update (so the id
+would change). Used more memory, more cpu, so fix that to just do inline.
+- Implement __isub__ method ( -= ) to substract elements frm the current list,
+i.e. not make a copy
+- Update __sub__ and impelment in __isub__ a change in behaviour, previously
+if we subtracted two lists and they contained common elements, we would only
+remove the FIRST instance of that element found (so QL['a', 'b', 'a'] -
+QL['a'] would equal ['b', 'a']). This has been updated to remove ALL
+references, (so QL['a', 'b', 'a'] - QL['a'] now will equal ['b']). I think
+this makes a lot more sense.
+- Document how easy and cool it is to extend QueryableList to add filtering
+capabilities to collections of your own custom modules
+- Add some missing docstrings, add some more comments. Remove the copy of
+README that was in the QueryableList.__init__ module docstring, too many
+copies to manage!
+- Update the static copy of FILTER_TYPES to instead be updated to instead use
+a dictionary comprehension.
+- Add/Transfer some common testing stuff into "tutils.py" test class
+- Update QueryBuilder with "addFilterAnd" and "addFilterOr" methods, as alias
+to "addFilter" with the filterType defined accordingly.
+
+
+
 * 2.2.1 - Mar 14 2017
 - Fix missing "icontains" and "contains" in the docstring (for pydoc)
 
