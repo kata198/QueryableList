@@ -7,7 +7,9 @@ FILTER_TYPES = {'eq', 'ieq', 'ne', 'ine', 'lt', 'gt', 'lte', 'gte', 'isnull', 'i
     'splitcontains', 'splitnotcontains', 'splitcontainsAny', 'splitnotcontainsAny'}
 
 
+# FILTER_METHOD_AND - Used in QueryBuilder to specify that this filter should be an "AND" filter
 FILTER_METHOD_AND = 'AND'
+# FILTER_METHOD_OR - Used in QueryBuilder to specify that this filter should be a "OR" filter
 FILTER_METHOD_OR  = 'OR'
 
 # FILTER_METHODS - Possible methods for filtering

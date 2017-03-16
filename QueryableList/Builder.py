@@ -1,5 +1,13 @@
-# Copyright (c) 2016 Timothy Savannah under the terms of the GNU Lesser General Public License version 2.1.
-#  You should have received a copy of this as "LICENSE" with this source distribution. The full license is available at https://raw.githubusercontent.com/kata198/QueryableList/master/LICENSE
+# Copyright (c) 2016, 2017 Timothy Savannah under the terms of the GNU Lesser General Public License version 2.1.
+#  You should have received a copy of this as "LICENSE" with this source distribution.
+#  The full license is available at https://raw.githubusercontent.com/kata198/QueryableList/master/LICENSE
+#
+# TODO: Add tests for QueryBuilder
+'''
+    Builder - Provides "QueryBuilder", which supports building reuaable queries which can be reused and executed
+      on datasets.
+
+'''
 
 #vim: set ts=4 sw=4 expandtab
 
@@ -14,6 +22,9 @@ class QueryBuilder(object):
     '''
         QueryBuilder - Build a reusable query that can be applied on multiple lists, or appended
             by several methods.
+
+            If you are going to perform the same filter a bunch of times, use QueryBuilder to save
+              the cost of constructing the query each time.
         '''
 
     def __init__(self):
@@ -34,6 +45,22 @@ class QueryBuilder(object):
             raise ValueError('Unknown filter method, %s. Must be one of: %s' %(str(filterMethod), repr(FILTER_METHODS)))
 
         self.filters.append((filterMethod, kwargs))
+
+    def addFilterAnd(self, **kwargs):
+        '''
+            addFilterAnd - Adds an AND filter. Alias for #addFilter(filterMethod=FILTER_METHOD_AND, ...)
+
+            @see #addFilter
+        '''
+        return self.addFilter(FILTER_METHOD_AND, **kwargs)
+
+    def addFilterOr(self, **kwargs):
+        '''
+            addFilterOr - Adds an OR filter, Alias for #addFIlter(filterMethod=FILTER_METHOD_OR, .,.)
+
+            @see #andFilter
+        '''
+        return self.addFilter(FILTER_METHOD_OR, **kwargs)
 
     def execute(self, lst):
         '''
@@ -74,6 +101,13 @@ class QueryBuilder(object):
 
     @staticmethod
     def _applyFilter(lst, filterMethod, filterArgs):
+        '''
+            _applyFilter - Applies the given filter method on a set of args
+
+             private method - used by execute
+
+             @return QueryableList - a QueryableList containing the elements of the resulting filter
+        '''
         if filterMethod == FILTER_METHOD_AND:
             return lst.filterAnd(**filterArgs)
         else: # ALready validated in addFIlter that type is AND or OR
