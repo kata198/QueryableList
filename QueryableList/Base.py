@@ -846,9 +846,11 @@ class QueryableListBase(list):
 
               += operator
 
-             TODO: This is creating a copy, maybe we could do it better...
+              Modifies original
+
         '''
-        return self.__class__(list.__iadd__(self, other))
+        list.__iadd__(self, other)
+        return self
 
     def __getslice__(self, start, end):
         '''

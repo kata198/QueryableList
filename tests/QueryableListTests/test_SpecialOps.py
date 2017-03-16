@@ -113,7 +113,6 @@ class TestSpecialOps(object):
 
         afterID1 = id(qObjs1)
 
-        # Expected to fail before fixing __iadd__
         assert origID1 == afterID1 , 'Expected id to not change after iadd (i.e. a copy was not made.)\nBefore = %d\nAfter  = %d' %(origID1, afterID1)
 
         qDicts1 = QueryableListDicts([self.dataDicts[0], self.dataDicts[1]])
@@ -134,7 +133,6 @@ class TestSpecialOps(object):
 
         afterID1 = id(qDicts1)
 
-        # Expected to fail before fixing __iadd__
         assert origID1 == afterID1 , 'Expected id to not change after iadd (i.e. a copy was not made.)\nBefore = %d\nAfter  = %d' %(origID1, afterID1)
 
 
