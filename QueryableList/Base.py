@@ -166,7 +166,7 @@ class QueryableListBase(list):
             caches = [dict() for i in range(len(self))]
             get_item_value = self._getItemValueFunction(caches, self._get_item_value)
         else:
-            get_item_value = get_item_value
+            get_item_value = self._get_item_value
 
         # AND loop - for each item in this collection, run through each of the filter types.
         # If any of the filter types do not match, move on to next item
@@ -519,7 +519,7 @@ class QueryableListBase(list):
             caches = [dict() for i in range(len(self))]
             get_item_value = self._getItemValueFunction(caches, self._get_item_value)
         else:
-            get_item_value = get_item_value
+            get_item_value = self._get_item_value
 
         # OR filtering - For each item in the collection
         #   Run through each filter type. If anything matches, we add the item to the collection and continue
@@ -964,7 +964,10 @@ class QueryableListBase(list):
 
         return ret
 
-    # TODO: Implement __ior__
+    def __ior__(self, other):
+        for item in other:
+            if item not in self:
+                self.append(item)
 
     def __and__(self, other):
         '''
@@ -972,6 +975,7 @@ class QueryableListBase(list):
 
               Returns a copy
         '''
+        # TODO: Optimize for least number of searches, N > M stuff
         ret = self.__class__([])
         for item in self:
             if item in other:
@@ -979,7 +983,10 @@ class QueryableListBase(list):
 
         return ret
 
-    # TODO: Implement __iand__
+    def __iand__(self, other):
+        for item in self:
+            if item not in other:
+                self.remove(item)
 
     def __xor__(self, other):
         '''
@@ -997,7 +1004,12 @@ class QueryableListBase(list):
 
         return ret
 
-    # TODO: Implement __ixor__
+    def __ixor__(self, other):
+        for item in other:
+            if item not in self:
+                self.append(item)
+            else:
+                self.remove(item)
 
 
 #vim: set ts=4 st=4 sw=4 expandtab
