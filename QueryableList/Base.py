@@ -968,6 +968,7 @@ class QueryableListBase(list):
         for item in other:
             if item not in self:
                 self.append(item)
+        return self
 
     def __and__(self, other):
         '''
@@ -987,6 +988,7 @@ class QueryableListBase(list):
         for item in self:
             if item not in other:
                 self.remove(item)
+        return self
 
     def __xor__(self, other):
         '''
@@ -1010,6 +1012,8 @@ class QueryableListBase(list):
                 self.append(item)
             else:
                 self.remove(item)
+        return self
+
 
 
 #vim: set ts=4 st=4 sw=4 expandtab
