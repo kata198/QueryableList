@@ -149,6 +149,23 @@ class QueryableListBase(list):
 
         return _getItemValue_impl
 
+    def customFilter(self, filterFunc):
+        '''
+            customFilter - Apply a custom filter to elements and return a QueryableList of matches
+
+            @param filterFunc <lambda/function< - A lambda/function that is passed an item, and
+               returns True if the item matches (will be returned), otherwise False.
+
+            @return - A QueryableList object of the same type, with only the matching objects returned.
+        '''
+        ret = self.__class__()
+        for item in self:
+            if filterFunc(item):
+                ret.append(item)
+
+        return ret
+                
+
     def filterAnd(self, **kwargs):
         '''
             filter/filterAnd - Performs a filter and returns a QueryableList object of the same type.

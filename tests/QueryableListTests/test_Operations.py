@@ -134,6 +134,29 @@ class TestOperations(object):
 
         doTest(qlObjs, 'AND', {'q__customMatch' : lambda q : q and len(q) > 5 }, (dataObjs[0], dataObjs[1]) )
 
+    def test_customFilter(self):
+        dataObjs = self.dataObjs
+        doTest = self._doTest
+
+        qlObjs = QueryableListObjs(dataObjs)
+
+        matchFunc = lambda item : getattr(item, 'b', None) and item.num > 0
+
+        results = qlObjs.customFilter(matchFunc)
+
+        assert len(results) == 1 , 'Expected to get one result, got %d' %(len(results),)
+
+        assert results[0] == dataObjs[0]
+
+        matchFunc = lambda item : item.a.upper() == 'ONE'
+
+        results = qlObjs.customFilter(matchFunc)
+
+        assert len(results) == 2, 'Expected to get two results, got %d' %(len(results),)
+
+        assert dataObjs[0] in results, 'Expected dataObjs[0] to be in match'
+        assert dataObjs[1] in results, 'Expected dataObjs[1] to be in match'
+
 
         
 '''
