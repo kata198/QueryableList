@@ -191,6 +191,15 @@ class QueryableListBase(list):
             if keepIt is False:
                 continue
 
+            for fieldName, matchFunc in filters['customMatch']:
+                val = get_item_value(item, fieldName)
+                if not matchFunc(val):
+                    keepIt = False
+                    break
+
+            if keepIt is False:
+                continue
+
             for fieldName, value in filters['in']:
                 if get_item_value(item, fieldName) not in value:
                     keepIt = False
@@ -539,6 +548,16 @@ class QueryableListBase(list):
 
             for fieldName, value in filters['isnot']:
                 if get_item_value(item, fieldName) is not value:
+                    keepIt = True
+                    break
+
+            if keepIt is True:
+                ret.append(item)
+                continue
+
+            for fieldName, matchFunc in filters['customMatch']:
+                val = get_item_value(item, fieldName)
+                if matchFunc(val):
                     keepIt = True
                     break
 

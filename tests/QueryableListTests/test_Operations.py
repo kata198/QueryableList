@@ -125,6 +125,17 @@ class TestOperations(object):
 
         doTest(qlObjs, 'AND', {'a__eq' : 'six', 'num__ne' : 7}, tuple() )
         doTest(qlObjs, 'AND', {'a__eq' : 'one', 'num__ne' : 7}, tuple(dataObjs[1]) )
+
+    def test_customMatch(self):
+        dataObjs = self.dataObjs
+        doTest = self._doTest
+
+        qlObjs = QueryableListObjs(dataObjs)
+
+        doTest(qlObjs, 'AND', {'q__customMatch' : lambda q : q and len(q) > 5 }, (dataObjs[0], dataObjs[1]) )
+
+
+        
 '''
     def test_chaining(self):
         qlObjs = QueryableListObjs(self.dataObjs)

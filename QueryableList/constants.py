@@ -6,7 +6,7 @@
 # FILTER_TYPES - All available filter types
 FILTER_TYPES = {'eq', 'ieq', 'ne', 'ine', 'lt', 'gt', 'lte', 'gte', 'isnull', 'is', 'isnot', 
     'in', 'notin', 'contains', 'icontains', 'notcontains', 'noticontains', 'containsAny', 'notcontainsAny',
-    'splitcontains', 'splitnotcontains', 'splitcontainsAny', 'splitnotcontainsAny'}
+    'splitcontains', 'splitnotcontains', 'splitcontainsAny', 'splitnotcontainsAny', 'customMatch'}
 
 
 # FILTER_METHOD_AND - Used in QueryBuilder to specify that this filter should be an "AND" filter
