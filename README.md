@@ -125,10 +125,14 @@ Extending QueryableList for your own data sets
 
 One of the powerful aspects of QueryableList is that it is easily extendable.
 
-If your objects are not simple dicts or objects, you can extend QueryableList.QueryableListBase 
-to almost instantly gain all the filtering functinoality with your complex collection.
+Generally, you won't need to do this, as QueryableListDicts or QueryableListObjs will handle your needs.
+
+But sometimes, you have more advanced requirements than can be satisfied by properties and matching on them.
+
+For these cases, you can extend QueryableList.QueryableListBase to create your own QueryableList type.
 
 You only need to implement a single method, 
+
 
 	@staticmethod
 	def _get_item_value(item, fieldName)
