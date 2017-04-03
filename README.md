@@ -77,6 +77,8 @@ You can filter the data within these objects through one of the following method
 
 *filterOr* - returns a QueryableList where each item matches ANY of the provided criteria.
 
+*customFilter* - Takes a lambda or a function as a parameter. Each element in the list is passed into this function, and if it returns True, that element is retained.
+
 
 The QueryableList types support all the operations of a list, and return the same QueryableList types so you can perform chaining. 
 
@@ -224,6 +226,7 @@ Operations
 
 * splitnotcontainsAny - Takes a tuple, (splitBy<str>, possibleMatches <list<str>>). Use for a string that represents a list. The field will be split by the first, "splitBy", param, and the result tested that it does not contains any of the items in the provided list.
 
+* customMatch - Takes a lambda or function, which is passed in the value of the given field. If it returns True, the element is a match, otherwise it is not.
 
 
 Full PyDoc Documentation
