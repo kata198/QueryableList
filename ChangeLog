@@ -1,3 +1,6 @@
+* 3.0.1 - Apr 06 2017
+- Fix MANIFEST.in to include ChangeLog properly and also include the unit tests
+
 * 3.0.0 - Apr 03 2017
 - Fix __iadd__ ( += )to not make a copy, but to just inline update the list.
 Previously it was updating the list inline, so references and such

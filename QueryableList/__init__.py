@@ -25,8 +25,8 @@
 
 __all__ = ('FILTER_TYPES', 'FILTER_METHOD_OR', 'FILTER_METHOD_OR', 'FILTER_METHODS', 'QueryableListObjs', 'QueryableListDicts', 'QueryableListBase', 'QueryableListMixed', 'QueryBuilder')
 
-__version__ = '3.0.0'
-__version_tuple__ = (3, 0, 0)
+__version__ = '3.0.1'
+__version_tuple__ = (3, 0, 1)
 
 
 from .constants import FILTER_TYPES, FILTER_METHODS, FILTER_METHOD_OR, FILTER_METHOD_OR
