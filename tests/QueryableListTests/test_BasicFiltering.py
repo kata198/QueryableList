@@ -6,6 +6,7 @@
 
 '''
 
+import copy
 import sys
 import subprocess
 
@@ -27,6 +28,46 @@ class TestBasicFiltering(object):
             { 'a' : 'one', 'b' : 'five', 'null1' : None, 'emptyStr' : ''},
             { 'a' : 'six', 'c' : 'eleven', 'null1' : None, 'emptyStr' : ''},
         ]
+
+
+    def test_copy(self):
+
+        qlObjs = QueryableListObjs(self.dataObjs)
+
+        assert copy.copy(qlObjs) == qlObjs , "Expected copy to equal the original"
+
+        assert id(copy.copy(qlObjs)) != id(qlObjs) , 'Expected id of copy to not euqla original'
+
+        assert copy.deepcopy(qlObjs) != qlObjs , "Expected deepcopy to NOT equal the original"
+
+        assert copy.deepcopy(qlObjs).count() == qlObjs.count() , 'Expected deepcopy to have same number of items'
+
+        aObjs = qlObjs.filter(a='one')
+
+        assert copy.copy(aObjs) == aObjs , 'After filter, expected copy to equal filtered original'
+
+        assert id(copy.copy(aObjs)) != id(aObjs) , 'After filter, expected id of copy to not equal id of filtered original'
+
+        assert copy.deepcopy(aObjs) != aObjs , 'After filter, expected deepcopy to NOT equal filtered original'
+
+        assert copy.deepcopy(aObjs).count() == aObjs.count() , 'Expected deepcopy to have same number of items'
+
+    def test_all(self):
+        qlObjs = QueryableListObjs(self.dataObjs)
+
+    
+        qlObjsAll = qlObjs.all()
+
+        assert qlObjsAll == qlObjs , 'Expected .all() to equal original'
+
+        assert id(qlObjsAll) != id(qlObjs) , 'Expected id of .all() to not equal id of original'
+
+        aObjs = qlObjs.filter(a='one')
+        aObjsAll = aObjs.all()
+
+        assert aObjs == aObjsAll , 'After filter, Expected .all() to equal filtered original'
+        
+        assert id(aObjs) != id(aObjsAll) , 'After filter, expected id of .all() NOT to equal id of filtered original'
 
 
     def test_equals(self):

@@ -98,7 +98,7 @@ class QueryableListBase(list):
 
     def all(self):
         '''
-            all - Returns all items in this collection, as the collection type (aka returns "self").
+            all - Returns all items in this collection, as the collection type (aka returns a copy of "self").
 
               This method is provided for method parity with ORMs that build a filter set with filter calls,
                 and then execute with ".all" (like django or IndexedRedis).
@@ -108,7 +108,7 @@ class QueryableListBase(list):
 
             @return <self.__class__> - self
         '''
-        return self
+        return self.__class__(self)
 
 
     @staticmethod
@@ -1066,6 +1066,12 @@ class QueryableListBase(list):
             else:
                 self.remove(item)
         return self
+
+    def __copy__(self):
+        '''
+            __copy__ - Make a copy of this collection
+        '''
+        return self.__class__(self)
 
 
 
