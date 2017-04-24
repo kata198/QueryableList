@@ -93,6 +93,18 @@ Example: e.x. results = objs.filter(name\_\_ne='Tim')  # get all objects where t
 For all available operations, see the "Operations" section below.
 
 
+Other Methods
+-------------
+
+QueryableList collections have several other methods to make them as closely api-compatible with server-side filtering ORMs as possible.
+
+This allows you to use the same functions regardless of if you are server-side or client-side filtering.
+
+* count - Returns the number of items in this collection ( same as len(..) )
+
+* all - Returns a copy of this collection, same elements but a new collection
+
+
 Building Reusable Queries
 -------------------------
 
