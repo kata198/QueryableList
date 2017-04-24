@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-#  Copyright (c) 2015 Tim Savannah under following terms:
+#  Copyright (c) 2015, 2016, 2017 Tim Savannah under following terms:
 #   You may modify and redistribe this script with your project
 #
 # It will download the latest GoodTests.py and use it to execute the tests.
@@ -33,8 +33,8 @@ ALLOW_SITE_INSTALL = False
 # This is the test directory that should contain all your tests. This should be a directory in your "tests" folder
 MY_TEST_DIRECTORY = 'QueryableListTests'
 
-__version__ = '1.2.3'
-__version_tuple__ = (1, 2, 3)
+__version__ = '2.1.0'
+__version_tuple__ = (2, 1, 0)
 
 def findGoodTests():
     '''
@@ -248,8 +248,22 @@ def main(thisDir=None, additionalArgs=[], MY_PACKAGE_MODULE=None, ALLOW_SITE_INS
     sys.stdout.write('Starting test..\n')
     sys.stdout.flush()
     sys.stderr.flush()
+
+
+    didTerminate = False
+
     pipe = subprocess.Popen([goodTestsInfo['path']] + additionalArgs + [MY_TEST_DIRECTORY], env=os.environ, shell=False)
-    pipe.wait()
+    while True:
+        try:
+            pipe.wait()
+            break
+        except KeyboardInterrupt:
+            if not didTerminate:
+                pipe.terminate()
+                didTerminate = True
+            else:
+                pipe.kill()
+                break
 
     return 0
 
