@@ -178,6 +178,17 @@ class QueryableListBase(list):
 
 
     def sort_by(self, fieldName, reverse=False):
+        '''
+            sort_by - Return a copy of this collection, sorted by the given fieldName.
+
+              The fieldName is accessed the same way as other filtering, so it supports custom properties, etc.
+
+              @param fieldName <str> - The name of the field on which to sort by
+
+              @param reverse <bool> Default False - If True, list will be in reverse order.
+
+              @return <QueryableList> - A QueryableList of the same type with the elements sorted based on arguments.
+        '''
         return self.__class__(
             sorted(self, key = lambda item : self._get_item_value(item, fieldName), reverse=reverse)
         )
