@@ -64,6 +64,8 @@ Methods defined here:<br>
 &nbsp;<br>
 &nbsp;&nbsp;Returns&nbsp;a&nbsp;copy</tt></dd></dl>
 
+<dl><dt><a name="QueryableListBase-__copy__"><strong>__copy__</strong></a>(self)</dt><dd><tt>__copy__&nbsp;-&nbsp;Make&nbsp;a&nbsp;copy&nbsp;of&nbsp;this&nbsp;collection</tt></dd></dl>
+
 <dl><dt><a name="QueryableListBase-__getslice__"><strong>__getslice__</strong></a>(self, start, end)</dt><dd><tt>__getslice__&nbsp;-&nbsp;Return&nbsp;a&nbsp;"slice"&nbsp;(subset)&nbsp;of&nbsp;the&nbsp;current&nbsp;collection.<br>
 &nbsp;<br>
 Returns&nbsp;a&nbsp;copy</tt></dd></dl>
@@ -99,7 +101,7 @@ Works&nbsp;inline&nbsp;and&nbsp;modifies&nbsp;#self</tt></dd></dl>
 &nbsp;<br>
 &nbsp;&nbsp;Returns&nbsp;a&nbsp;copy</tt></dd></dl>
 
-<dl><dt><a name="QueryableListBase-all"><strong>all</strong></a>(self)</dt><dd><tt>all&nbsp;-&nbsp;Returns&nbsp;all&nbsp;items&nbsp;in&nbsp;this&nbsp;collection,&nbsp;as&nbsp;the&nbsp;collection&nbsp;type&nbsp;(aka&nbsp;returns&nbsp;"self").<br>
+<dl><dt><a name="QueryableListBase-all"><strong>all</strong></a>(self)</dt><dd><tt>all&nbsp;-&nbsp;Returns&nbsp;all&nbsp;items&nbsp;in&nbsp;this&nbsp;collection,&nbsp;as&nbsp;the&nbsp;collection&nbsp;type&nbsp;(aka&nbsp;returns&nbsp;a&nbsp;copy&nbsp;of&nbsp;"self").<br>
 &nbsp;<br>
 &nbsp;&nbsp;This&nbsp;method&nbsp;is&nbsp;provided&nbsp;for&nbsp;method&nbsp;parity&nbsp;with&nbsp;ORMs&nbsp;that&nbsp;build&nbsp;a&nbsp;filter&nbsp;set&nbsp;with&nbsp;filter&nbsp;calls,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;then&nbsp;execute&nbsp;with&nbsp;".all"&nbsp;(like&nbsp;django&nbsp;or&nbsp;IndexedRedis).<br>
@@ -108,6 +110,12 @@ Works&nbsp;inline&nbsp;and&nbsp;modifies&nbsp;#self</tt></dd></dl>
 &nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;filtering&nbsp;already-fetched&nbsp;objects,&nbsp;the&nbsp;usage&nbsp;remains&nbsp;the&nbsp;same.<br>
 &nbsp;<br>
 @return&nbsp;&lt;self.<strong>__class__</strong>&gt;&nbsp;-&nbsp;self</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-count"><strong>count</strong></a>(self)</dt><dd><tt>count&nbsp;-&nbsp;Returns&nbsp;the&nbsp;number&nbsp;of&nbsp;items&nbsp;in&nbsp;this&nbsp;collection.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;the&nbsp;same&nbsp;as&nbsp;len(...),&nbsp;but&nbsp;is&nbsp;added&nbsp;to&nbsp;be&nbsp;compatible&nbsp;with&nbsp;many&nbsp;server-side&nbsp;ORMs&nbsp;which&nbsp;implement&nbsp;"count"&nbsp;as&nbsp;a&nbsp;function.<br>
+&nbsp;<br>
+&nbsp;&nbsp;@return&nbsp;&lt;int&gt;&nbsp;-&nbsp;Number&nbsp;of&nbsp;items&nbsp;in&nbsp;this&nbsp;collection</tt></dd></dl>
 
 <dl><dt><a name="QueryableListBase-customFilter"><strong>customFilter</strong></a>(self, filterFunc)</dt><dd><tt>customFilter&nbsp;-&nbsp;Apply&nbsp;a&nbsp;custom&nbsp;filter&nbsp;to&nbsp;elements&nbsp;and&nbsp;return&nbsp;a&nbsp;QueryableList&nbsp;of&nbsp;matches<br>
 &nbsp;<br>
@@ -133,6 +141,16 @@ Works&nbsp;inline&nbsp;and&nbsp;modifies&nbsp;#self</tt></dd></dl>
 @params&nbsp;are&nbsp;in&nbsp;the&nbsp;format&nbsp;of&nbsp;fieldName__operation=value&nbsp;&nbsp;where&nbsp;fieldName&nbsp;is&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;field&nbsp;on&nbsp;any&nbsp;given&nbsp;item,&nbsp;"operation"&nbsp;is&nbsp;one&nbsp;of&nbsp;the&nbsp;given&nbsp;operations&nbsp;(@see&nbsp;main&nbsp;documentation)&nbsp;(e.x.&nbsp;eq,&nbsp;ne,&nbsp;isnull),&nbsp;and&nbsp;value&nbsp;is&nbsp;what&nbsp;is&nbsp;used&nbsp;in&nbsp;the&nbsp;operation.<br>
 &nbsp;<br>
 @return&nbsp;-&nbsp;A&nbsp;QueryableList&nbsp;object&nbsp;of&nbsp;the&nbsp;same&nbsp;type,&nbsp;with&nbsp;only&nbsp;the&nbsp;matching&nbsp;objects&nbsp;returned.</tt></dd></dl>
+
+<dl><dt><a name="QueryableListBase-sort_by"><strong>sort_by</strong></a>(self, fieldName, reverse=False)</dt><dd><tt>sort_by&nbsp;-&nbsp;Return&nbsp;a&nbsp;copy&nbsp;of&nbsp;this&nbsp;collection,&nbsp;sorted&nbsp;by&nbsp;the&nbsp;given&nbsp;fieldName.<br>
+&nbsp;<br>
+&nbsp;&nbsp;The&nbsp;fieldName&nbsp;is&nbsp;accessed&nbsp;the&nbsp;same&nbsp;way&nbsp;as&nbsp;other&nbsp;filtering,&nbsp;so&nbsp;it&nbsp;supports&nbsp;custom&nbsp;properties,&nbsp;etc.<br>
+&nbsp;<br>
+&nbsp;&nbsp;@param&nbsp;fieldName&nbsp;&lt;str&gt;&nbsp;-&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;field&nbsp;on&nbsp;which&nbsp;to&nbsp;sort&nbsp;by<br>
+&nbsp;<br>
+&nbsp;&nbsp;@param&nbsp;reverse&nbsp;&lt;bool&gt;&nbsp;Default&nbsp;False&nbsp;-&nbsp;If&nbsp;True,&nbsp;<a href="builtins.html#list">list</a>&nbsp;will&nbsp;be&nbsp;in&nbsp;reverse&nbsp;order.<br>
+&nbsp;<br>
+&nbsp;&nbsp;@return&nbsp;&lt;QueryableList&gt;&nbsp;-&nbsp;A&nbsp;QueryableList&nbsp;of&nbsp;the&nbsp;same&nbsp;type&nbsp;with&nbsp;the&nbsp;elements&nbsp;sorted&nbsp;based&nbsp;on&nbsp;arguments.</tt></dd></dl>
 
 <hr>
 Data descriptors defined here:<br>
@@ -189,8 +207,6 @@ Methods inherited from <a href="builtins.html#list">builtins.list</a>:<br>
 <dl><dt><a name="QueryableListBase-clear"><strong>clear</strong></a>(...)</dt><dd><tt>L.<a href="#QueryableListBase-clear">clear</a>()&nbsp;-&gt;&nbsp;None&nbsp;--&nbsp;remove&nbsp;all&nbsp;items&nbsp;from&nbsp;L</tt></dd></dl>
 
 <dl><dt><a name="QueryableListBase-copy"><strong>copy</strong></a>(...)</dt><dd><tt>L.<a href="#QueryableListBase-copy">copy</a>()&nbsp;-&gt;&nbsp;<a href="builtins.html#list">list</a>&nbsp;--&nbsp;a&nbsp;shallow&nbsp;copy&nbsp;of&nbsp;L</tt></dd></dl>
-
-<dl><dt><a name="QueryableListBase-count"><strong>count</strong></a>(...)</dt><dd><tt>L.<a href="#QueryableListBase-count">count</a>(value)&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;number&nbsp;of&nbsp;occurrences&nbsp;of&nbsp;value</tt></dd></dl>
 
 <dl><dt><a name="QueryableListBase-extend"><strong>extend</strong></a>(...)</dt><dd><tt>L.<a href="#QueryableListBase-extend">extend</a>(iterable)&nbsp;-&gt;&nbsp;None&nbsp;--&nbsp;extend&nbsp;<a href="builtins.html#list">list</a>&nbsp;by&nbsp;appending&nbsp;elements&nbsp;from&nbsp;the&nbsp;iterable</tt></dd></dl>
 
