@@ -1,3 +1,24 @@
+* 3.1.0 - Apr 23 2017
+
+- Add "sort_by" method, which allows returning a sorted copy of the
+collection, using the same field access _get_item_value already defined.
+
+- Add "count" method to return the number of items in the collection (same as
+len), which matches the interface on a lot of server-side filtering ORMs, to
+increase the compatability between the two.
+
+- Make "all()" method return a copy of the collection (but same elements)
+
+- Implement "__copy__" to do the same as "all()", leaving deepcopy to create
+copy of both the collection AND the elements within it
+
+- Load latest "runTests.py" from GoodTests.py. It is recommended that you
+delete the local copy and let it download the latest GoodTests.py if you run
+unit tests.
+
+- Some more unit tests
+
+
 * 3.0.1 - Apr 06 2017
 - Fix MANIFEST.in to include ChangeLog properly and also include the unit tests
 
