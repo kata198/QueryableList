@@ -159,22 +159,6 @@ class TestOperations(object):
 
 
         
-'''
-    def test_chaining(self):
-        qlObjs = QueryableListObjs(self.dataObjs)
-
-        found = qlObjs.filter(a__eq='one').filter(b__eq='two')
-
-        assert len(found) == 1, 'Expected chained filter to return one element, got %d' %(len(found), )
-
-
-        assert found[0].a == 'one' and found[0].b == 'two' , 'Got wrong item in chained query'
-
-    def test_filterOr(self):
-        qlObjs = QueryableListObjs(self.dataObjs)
-
-'''
-
 if __name__ == '__main__':
     sys.exit(subprocess.Popen('GoodTests.py -n1 "%s" %s' %(sys.argv[0], ' '.join(['"%s"' %(arg.replace('"', '\\"'), ) for arg in sys.argv[1:]]) ), shell=True).wait())
 
