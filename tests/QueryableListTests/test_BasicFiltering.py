@@ -47,6 +47,7 @@ class TestBasicFiltering(object):
         found = QueryableListObjs(self.dataObjs).filter(a__eq='one')
 
         assert len(found) == 2, 'Expected to find two items in query, found %d' %(len(found), )
+        assert found.count() == 2 , 'Expected count() to return 2 elements. Got: %d' %(found.count(), )
 
     def test_ne(self):
         qlObjs = QueryableListObjs(self.dataObjs)

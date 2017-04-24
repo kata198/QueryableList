@@ -166,6 +166,16 @@ class QueryableListBase(list):
         return ret
                 
 
+    def count(self):
+        '''
+            count - Returns the number of items in this collection.
+
+                This is the same as len(...), but is added to be compatible with many server-side ORMs which implement "count" as a function.
+
+              @return <int> - Number of items in this collection
+        '''
+        return len(self)
+
 
     def sort_by(self, fieldName, reverse=False):
         return self.__class__(
