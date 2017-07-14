@@ -158,6 +158,69 @@ class TestOperations(object):
         assert dataObjs[1] in results, 'Expected dataObjs[1] to be in match'
 
 
+    def test_eq(self):
+        dataObjs = self.dataObjs
+        doTest = self._doTest
+
+        qlObjs = QueryableListObjs(dataObjs)
+
+        doTest(qlObjs, 'AND', {'a__eq' : 'one'}, ( dataObjs[0], dataObjs[1] ) )
+        doTest(qlObjs, 'OR', {'b__eq' : 'five', 'num__eq' : 7 }, (dataObjs[0], dataObjs[1], dataObjs[2]) )
+        doTest(qlObjs, 'AND', {'a__eq' : 'nine'}, tuple() )
+
+    def test_ne(self):
+        dataObjs = self.dataObjs
+        doTest = self._doTest
+
+        qlObjs = QueryableListObjs(dataObjs)
+
+        doTest(qlObjs, 'AND', {'a__ne' : 'one'}, ( dataObjs[2], ) )
+        doTest(qlObjs, 'OR', {'b__ne' : 'two', 'num__ne' : -5 }, (dataObjs[0], dataObjs[1], dataObjs[2]) )
+
+    def test_lt(self):
+        dataObjs = self.dataObjs
+        doTest = self._doTest
+
+        qlObjs = QueryableListObjs(dataObjs)
+
+        doTest(qlObjs, 'AND', {'num__lt' : 8}, ( dataObjs[0], dataObjs[1], dataObjs[2], ) )
+        doTest(qlObjs, 'OR', {'num__lt' : 0, }, (dataObjs[1],) )
+        doTest(qlObjs, 'AND', {'num__lt' : 7}, (  dataObjs[1], ) )
+
+    def test_lte(self):
+        dataObjs = self.dataObjs
+        doTest = self._doTest
+
+        qlObjs = QueryableListObjs(dataObjs)
+
+        doTest(qlObjs, 'AND', {'num__lte' : 8}, ( dataObjs[0], dataObjs[1], dataObjs[2], ) )
+        doTest(qlObjs, 'OR', {'num__lte' : 0, }, (dataObjs[1],) )
+        doTest(qlObjs, 'AND', {'num__lte' : 7}, (  dataObjs[0], dataObjs[1], dataObjs[2] ) )
+
+    def test_gt(self):
+        dataObjs = self.dataObjs
+        doTest = self._doTest
+
+        qlObjs = QueryableListObjs(dataObjs)
+
+        doTest(qlObjs, 'AND', {'num__gt' : 8}, tuple() )
+        doTest(qlObjs, 'OR', {'num__gt' : 0, }, (dataObjs[0], dataObjs[2]) )
+        doTest(qlObjs, 'AND', {'num__gt' : 7}, tuple() )
+        doTest(qlObjs, 'AND', {'num__gt' : -5}, ( dataObjs[0], dataObjs[2] ) )
+        doTest(qlObjs, 'AND', {'num__gt' : -6}, (dataObjs[0], dataObjs[1], dataObjs[2]  ) )
+
+    def test_gte(self):
+        dataObjs = self.dataObjs
+        doTest = self._doTest
+
+        qlObjs = QueryableListObjs(dataObjs)
+
+        doTest(qlObjs, 'AND', {'num__gte' : 8}, tuple() )
+        doTest(qlObjs, 'OR', {'num__gte' : 0, }, (dataObjs[0], dataObjs[2]) )
+        doTest(qlObjs, 'AND', {'num__gte' : 7}, (dataObjs[0], dataObjs[2] ) )
+        doTest(qlObjs, 'AND', {'num__gte' : -5}, (dataObjs[0], dataObjs[1], dataObjs[2]  ) )
+        doTest(qlObjs, 'AND', {'num__gte' : -6}, (dataObjs[0], dataObjs[1], dataObjs[2]  ) )
+        
         
 if __name__ == '__main__':
     sys.exit(subprocess.Popen('GoodTests.py -n1 "%s" %s' %(sys.argv[0], ' '.join(['"%s"' %(arg.replace('"', '\\"'), ) for arg in sys.argv[1:]]) ), shell=True).wait())
