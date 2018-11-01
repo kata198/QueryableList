@@ -15,7 +15,6 @@
 import imp
 import os
 
-import glob
 import subprocess
 import sys
 
@@ -33,8 +32,8 @@ ALLOW_SITE_INSTALL = False
 # This is the test directory that should contain all your tests. This should be a directory in your "tests" folder
 MY_TEST_DIRECTORY = 'QueryableListTests'
 
-__version__ = '2.1.0'
-__version_tuple__ = (2, 1, 0)
+__version__ = '3.0.0'
+__version_tuple__ = (3, 0, 0)
 
 def findGoodTests():
     '''
@@ -66,6 +65,87 @@ def findGoodTests():
         "success" : success 
     }
 
+def findExecutable(execName):
+    '''
+        findExecutable - Search PATH for an executable
+
+        @return <dict> {
+            'path' <str> -> Path to executable (if found, see "success")
+            'success' <bool> -> True/False if we successfully found requested executable
+        }
+    '''
+
+    pathSplit = os.environ['PATH'].split(':')
+    if '.' not in pathSplit:
+        pathSplit = ['.'] + pathSplit
+        os.environ['PATH'] = ':'.join(pathSplit)
+
+    result = ''
+    success = False
+    for path in pathSplit:
+        if path.endswith(os.sep):
+            path = path[:-1]
+        guess = path + os.sep + execName
+        if os.path.exists(guess):
+            success = True
+            result = guess
+            break
+
+    return {
+        "path"    : result,
+        "success" : success 
+    }
+
+def findGoodTests():
+    return findExecutable('GoodTests.py')
+
+
+def try_pip_install():
+    '''
+        try to pip install GoodTests.py
+
+        First, try via pip module.
+
+        If that fails, try to locate pip by dirname(current python executable) + os.sep + pip
+        If that does not exist, scan PATH for pip
+
+        If found a valid pip executable, invoke it to install GoodTests
+        otherwise, fail.
+    '''
+
+    didImport = False
+    try:
+        import pip
+        didImport = True
+    except:
+        pass
+
+    if didImport is True:
+        print ( "Found pip as module=pip")
+        res = pip.main(['install', 'GoodTests'])
+        if res == 0:
+            return 0
+        sys.stderr.write('Failed to install GoodTests via pip module. Falling back to pip executable...\n\n')
+
+    pipPath = os.path.dirname(sys.executable) + os.sep + 'pip'
+    print ( 'Searching for pip at "%s"' %(pipPath, ) )
+    if not os.path.exists(pipPath):
+        print ( '"%s" does not exist. Scanning PATH to locate a usable pip executable' %(pipPath, ))
+        pipPath = None
+        searchResults = findExecutable('pip')
+        if not searchResults['success']:
+            sys.stderr.write('Failed to find a usable pip executable in PATH.\n')
+            return 1 # Failed to locate a usable pip
+
+        pipPath = searchResults['path']
+
+    print ( 'Found pip executable at "%s"' %(pipPath, ) )
+    print ( "Executing:  %s %s 'install' 'GoodTests'" %(sys.executable, pipPath) )
+    pipe = subprocess.Popen([sys.executable, pipPath, 'install', 'GoodTests'], shell=False, env=os.environ)
+    res = pipe.wait()
+    
+    return res
+
 def download_goodTests(GOODTESTS_URL=None):
     '''
         download_goodTests - Attempts to download GoodTests, using the default global url (or one provided).
@@ -95,11 +175,9 @@ def download_goodTests(GOODTESTS_URL=None):
             import urllib.request as urllib
         except:
             sys.stderr.write('Failed to import urllib. Trying pip.\n')
-            import subprocess
-            pipe = subprocess.Popen('pip install GoodTests', shell=True)
-            res = pipe.wait()
+            res = try_pip_install()
             if res != 0:
-                sys.stderr.write('Failed to install GoodTests with pip ordirect download. aborting.\n')
+                sys.stderr.write('Failed to install GoodTests with pip or direct download. aborting.\n')
                 return 1
     try:
         response = urllib.urlopen(GOODTESTS_URL)
@@ -108,7 +186,11 @@ def download_goodTests(GOODTESTS_URL=None):
             contents = contents.decode('ascii')
     except Exception as e:
         sys.stderr.write('Failed to download GoodTests.py from "%s"\n%s\n' %(GOODTESTS_URL, str(e)))
-        return 1
+        sys.stderr.write('\nTrying pip.\n')
+        res = try_pip_install()
+        if res != 0:
+            sys.stderr.write('Failed to install GoodTests with pip or direct download. aborting.\n')
+            return 1
     try:
         with open('GoodTests.py', 'w') as f:
             f.write(contents)
@@ -167,8 +249,6 @@ def main(thisDir=None, additionalArgs=[], MY_PACKAGE_MODULE=None, ALLOW_SITE_INS
 
     os.chdir(thisDir)
 
-    didDownload = False
-    
     goodTestsInfo = findGoodTests()
     if goodTestsInfo['success'] is False:
         downloadRet = download_goodTests(GOODTESTS_URL)
@@ -179,9 +259,6 @@ def main(thisDir=None, additionalArgs=[], MY_PACKAGE_MODULE=None, ALLOW_SITE_INS
             sys.stderr.write('Could not download or find GoodTests.py. Try to download it yourself using "pip install GoodTests", or wget %s\n' %( GOODTESTS_URL,))
             return 1
 
-    PYTHON_ENDINGS = ('.py', '.pyc', '.pyo')
-
-    origMyPackageModule = MY_PACKAGE_MODULE[:]
     baseName = os.path.basename(MY_PACKAGE_MODULE)
     dirName = os.path.dirname(MY_PACKAGE_MODULE)
     
@@ -230,7 +307,7 @@ def main(thisDir=None, additionalArgs=[], MY_PACKAGE_MODULE=None, ALLOW_SITE_INS
         __import__(baseName)
     except ImportError as e:
         if baseName.endswith(('.py', '.pyc', '.pyo')):
-            MY_PACKAGE_MODULE = baseName[baseName.rindex('.')]
+            MY_PACKAGE_MODULE = baseName[ : baseName.rindex('.')]
 
         if e.name != MY_PACKAGE_MODULE:
             sys.stderr.write('Error while importing %s: %s\n Likely this is another dependency that needs to be installed\nPerhaps run "pip install %s" or install the providing package.\n\n' %(e.name, str(e), e.name))
@@ -251,8 +328,7 @@ def main(thisDir=None, additionalArgs=[], MY_PACKAGE_MODULE=None, ALLOW_SITE_INS
 
 
     didTerminate = False
-
-    pipe = subprocess.Popen([goodTestsInfo['path']] + additionalArgs + [MY_TEST_DIRECTORY], env=os.environ, shell=False)
+    pipe = subprocess.Popen([sys.executable, goodTestsInfo['path']] + additionalArgs + [MY_TEST_DIRECTORY], env=os.environ, shell=False)
     while True:
         try:
             pipe.wait()
